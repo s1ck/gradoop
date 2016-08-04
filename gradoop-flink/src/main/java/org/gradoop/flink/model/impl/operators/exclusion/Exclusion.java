@@ -35,17 +35,19 @@
 package org.gradoop.flink.model.impl.operators.exclusion;
 
 import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.TargetId;
 import org.gradoop.common.model.impl.pojo.GraphHead;
-import org.gradoop.flink.model.api.operators.BinaryGraphToGraphOperator;
+import org.gradoop.common.model.api.operators.BinaryGraphToGraphOperator;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.SourceId;
 import org.gradoop.flink.model.impl.functions.graphcontainment.NotInGraphBroadcast;
 import org.gradoop.flink.model.impl.functions.utils.LeftSide;
 import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Computes the exclusion graph from two logical graphs.
@@ -62,8 +64,8 @@ public class Exclusion implements BinaryGraphToGraphOperator {
    * @return first graph without elements from second graph
    */
   @Override
-  public LogicalGraph execute(
-    LogicalGraph firstGraph, LogicalGraph secondGraph) {
+  public LogicalGraph execute(LogicalGraph firstGraph,
+    LogicalGraph secondGraph) {
 
     DataSet<GradoopId> graphId = secondGraph.getGraphHead()
       .map(new Id<GraphHead>());
@@ -84,8 +86,8 @@ public class Exclusion implements BinaryGraphToGraphOperator {
       .equalTo(new Id<Vertex>())
       .with(new LeftSide<Edge, Vertex>());
 
-    return LogicalGraph.fromDataSets(
-      newVertexSet, newEdgeSet, firstGraph.getConfig());
+    return FlinkLogicalGraph.fromDataSets(newVertexSet, newEdgeSet,
+      (GradoopFlinkConfig) firstGraph.getConfig());
   }
 
   /**

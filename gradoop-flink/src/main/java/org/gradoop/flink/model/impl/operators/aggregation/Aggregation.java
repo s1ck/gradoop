@@ -18,12 +18,14 @@
 package org.gradoop.flink.model.impl.operators.aggregation;
 
 import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.properties.PropertyValue;
-import org.gradoop.flink.model.api.functions.AggregateFunction;
-import org.gradoop.flink.model.api.operators.UnaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.functions.AggregateFunction;
+import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.PropertySetterBroadcast;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -70,11 +72,11 @@ public class Aggregation implements UnaryGraphToGraphOperator {
       .map(new PropertySetterBroadcast<GraphHead>(aggregatePropertyKey))
       .withBroadcastSet(aggregateValue, PropertySetterBroadcast.VALUE);
 
-    return LogicalGraph.fromDataSets(
-        graphHead,
-        graph.getVertices(),
-        graph.getEdges(),
-        graph.getConfig());
+    return FlinkLogicalGraph.fromDataSets(
+      graphHead,
+      graph.getVertices(),
+      graph.getEdges(),
+      (GradoopFlinkConfig) graph.getConfig());
   }
 
   /**

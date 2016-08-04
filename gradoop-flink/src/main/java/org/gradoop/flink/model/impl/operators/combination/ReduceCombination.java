@@ -17,9 +17,11 @@
 
 package org.gradoop.flink.model.impl.operators.combination;
 
-import org.gradoop.flink.model.impl.LogicalGraph;
-import org.gradoop.flink.model.api.operators.ReducibleBinaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.common.model.api.operators.ReducibleBinaryGraphToGraphOperator;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Computes the combined graph from a collection of logical graphs.
@@ -35,10 +37,9 @@ public class ReduceCombination implements ReducibleBinaryGraphToGraphOperator {
    */
   @Override
   public LogicalGraph execute(GraphCollection collection) {
-    return LogicalGraph.fromDataSets(
+    return FlinkLogicalGraph.fromDataSets(
       collection.getVertices(),
-      collection.getEdges(),
-      collection.getConfig());
+      collection.getEdges(), (GradoopFlinkConfig) collection.getConfig());
   }
 
   @Override

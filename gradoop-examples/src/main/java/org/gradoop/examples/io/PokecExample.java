@@ -29,7 +29,7 @@ import org.gradoop.flink.io.impl.graph.GraphDataSource;
 import org.gradoop.flink.io.impl.graph.tuples.ImportEdge;
 import org.gradoop.flink.io.impl.graph.tuples.ImportVertex;
 import org.gradoop.flink.io.impl.json.JSONDataSink;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 import java.util.Calendar;
@@ -37,7 +37,7 @@ import java.util.regex.Pattern;
 
 /**
  * Example program that reads the Pokec social network from a CSV representation
- * into a {@link LogicalGraph}, build a summary graph based on users attributed
+ * into a {@link FlinkLogicalGraph}, build a summary graph based on users attributed
  * and stores it into JSON files.
  *
  * The dataset is available under https://snap.stanford.edu/data/soc-pokec.html.

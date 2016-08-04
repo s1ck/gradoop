@@ -17,11 +17,12 @@
 
 package org.gradoop.flink.io.impl.dot;
 
-import org.gradoop.flink.io.api.DataSink;
+import org.gradoop.common.io.api.DataSink;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.flink.io.impl.dot.functions.DOTFileFormat;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 
 import java.io.IOException;
 
@@ -56,18 +57,16 @@ public class DOTDataSink implements DataSink {
 
   @Override
   public void write(LogicalGraph logicalGraph) throws IOException {
-    write(GraphCollection.fromGraph(logicalGraph).toTransactions());
+    write(FlinkGraphCollection.fromGraph(logicalGraph).toTransactions());
   }
 
   @Override
-  public void write(GraphCollection graphCollection) throws
-    IOException {
+  public void write(GraphCollection graphCollection) throws IOException {
     write(graphCollection.toTransactions());
   }
 
   @Override
-  public void write(GraphTransactions graphTransactions) throws
-    IOException {
+  public void write(GraphTransactions graphTransactions) throws IOException {
     graphTransactions.getTransactions()
       .writeAsFormattedText(path, new DOTFileFormat(graphInformation));
   }

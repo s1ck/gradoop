@@ -1,8 +1,9 @@
 package org.gradoop.flink.model.impl.operators.limit;
 
 import org.apache.flink.api.common.InvalidProgramException;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 import org.junit.Test;
@@ -20,8 +21,7 @@ public class LimitTest extends GradoopFlinkTestBase {
     GraphCollection inputCollection = loader
       .getGraphCollectionByVariables("g0", "g1", "g2", "g3");
 
-    GraphCollection outputCollection =
-      inputCollection.limit(limit);
+    GraphCollection outputCollection = inputCollection.limit(limit);
 
     assertEquals(limit, outputCollection.getGraphHeads().count());
   }
@@ -30,7 +30,7 @@ public class LimitTest extends GradoopFlinkTestBase {
   public void testOutOfBound() throws Exception {
     FlinkAsciiGraphLoader loader = getSocialNetworkLoader();
 
-    GraphCollection inputCollection = loader
+    FlinkGraphCollection inputCollection = loader
       .getGraphCollectionByVariables("g0", "g1");
 
     int limit = 4;
@@ -43,8 +43,8 @@ public class LimitTest extends GradoopFlinkTestBase {
 
   @Test
   public void testEmpty() throws Exception {
-    GraphCollection inputCollection =
-      GraphCollection.createEmptyCollection(
+    FlinkGraphCollection inputCollection =
+      FlinkGraphCollection.createEmptyCollection(
         GradoopFlinkConfig.createConfig(getExecutionEnvironment()));
 
     int limit = 4;
@@ -57,8 +57,8 @@ public class LimitTest extends GradoopFlinkTestBase {
 
   @Test(expected = InvalidProgramException.class)
   public void testNegativeLimit() throws Exception {
-    GraphCollection inputCollection =
-      GraphCollection.createEmptyCollection(
+    FlinkGraphCollection inputCollection =
+      FlinkGraphCollection.createEmptyCollection(
         GradoopFlinkConfig.createConfig(getExecutionEnvironment()));
 
     int limit = -1;

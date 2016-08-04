@@ -23,10 +23,10 @@ import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.flink.api.java.ExecutionEnvironment;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.flink.io.impl.json.JSONDataSink;
 import org.gradoop.flink.io.impl.json.JSONDataSource;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
@@ -116,7 +116,7 @@ public abstract class AbstractRunner {
       directory + GRAPHS_JSON,
       directory + VERTICES_JSON,
       directory + EDGES_JSON,
-      graph.getConfig()));
+      (GradoopFlinkConfig) graph.getConfig()));
 
     getExecutionEnvironment().execute();
   }
@@ -134,8 +134,7 @@ public abstract class AbstractRunner {
     collection.writeTo(new JSONDataSink(
       directory + GRAPHS_JSON,
       directory + VERTICES_JSON,
-      directory + EDGES_JSON,
-      collection.getConfig()));
+      directory + EDGES_JSON, (GradoopFlinkConfig) collection.getConfig()));
 
     getExecutionEnvironment().execute();
   }

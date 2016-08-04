@@ -18,15 +18,21 @@
 package org.gradoop.flink.model.impl.operators.tostring;
 
 import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators
+  .UnaryGraphCollectionToValueOperator;
+import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.model.impl.functions.epgm.LabelCombiner;
+import org.gradoop.flink.model.impl.operators.tostring.api.EdgeToString;
 import org.gradoop.flink.model.impl.operators.tostring.api.GraphHeadToString;
 import org.gradoop.flink.model.impl.operators.tostring.api.VertexToString;
-import org.gradoop.flink.model.impl.operators.tostring.functions
-  .IncomingAdjacencyList;
-import org.gradoop.flink.model.impl.operators.tostring.functions
-  .MultiEdgeStringCombiner;
+import org.gradoop.flink.model.impl.operators.tostring.functions.AdjacencyMatrix;
+import org.gradoop.flink.model.impl.operators.tostring.functions.ConcatGraphHeadStrings;
+import org.gradoop.flink.model.impl.operators.tostring.functions.IncomingAdjacencyList;
+import org.gradoop.flink.model.impl.operators.tostring.functions.MultiEdgeStringCombiner;
 import org.gradoop.flink.model.impl.operators.tostring.functions.OutgoingAdjacencyList;
 import org.gradoop.flink.model.impl.operators.tostring.functions.SourceStringUpdater;
 import org.gradoop.flink.model.impl.operators.tostring.functions.SwitchSourceTargetIds;
@@ -34,15 +40,8 @@ import org.gradoop.flink.model.impl.operators.tostring.functions.TargetStringUpd
 import org.gradoop.flink.model.impl.operators.tostring.functions.UndirectedAdjacencyList;
 import org.gradoop.flink.model.impl.operators.tostring.tuples.EdgeString;
 import org.gradoop.flink.model.impl.operators.tostring.tuples.GraphHeadString;
-import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.api.operators.UnaryGraphCollectionToValueOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.model.impl.operators.tostring.api.EdgeToString;
-import org.gradoop.flink.model.impl.operators.tostring.functions.AdjacencyMatrix;
-import org.gradoop.flink.model.impl.operators.tostring.functions.ConcatGraphHeadStrings;
-
 import org.gradoop.flink.model.impl.operators.tostring.tuples.VertexString;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Operator deriving a string representation from a graph collection.
@@ -187,8 +186,7 @@ public class CanonicalAdjacencyMatrixBuilder implements
     // 11. add empty head to prevent empty result for empty collection
 
     graphHeadLabels = graphHeadLabels
-      .union(collection
-        .getConfig()
+      .union(((GradoopFlinkConfig) collection.getConfig())
         .getExecutionEnvironment()
         .fromElements(new GraphHeadString(GradoopId.get(), "")));
 

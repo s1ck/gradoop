@@ -24,7 +24,7 @@ import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.api.operators.GraphBaseOperators;
+import org.gradoop.common.model.api.operators.GraphBaseOperators;
 import org.gradoop.flink.model.impl.functions.bool.False;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
@@ -33,8 +33,8 @@ import java.util.Collection;
 /**
  * Base class for graph representations.
  *
- * @see LogicalGraph
- * @see GraphCollection
+ * @see FlinkLogicalGraph
+ * @see FlinkGraphCollection
  */
 public abstract class GraphBase implements GraphBaseOperators {
   /**
@@ -146,6 +146,7 @@ public abstract class GraphBase implements GraphBaseOperators {
    *
    * @return Gradoop Flink configuration
    */
+  @Override
   public GradoopFlinkConfig getConfig() {
     return config;
   }

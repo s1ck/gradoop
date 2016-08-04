@@ -1,12 +1,13 @@
 package org.gradoop.flink.model.impl.operators.subgraph;
 
 import org.apache.flink.api.common.functions.FilterFunction;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.properties.PropertyValue;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 
@@ -86,7 +87,8 @@ public class SubgraphTest extends GradoopFlinkTestBase {
       }
     };
 
-    LogicalGraph output = input.subgraph(vertexFilterFunction, edgeFilterFunction);
+    LogicalGraph output = input
+      .subgraph(vertexFilterFunction, edgeFilterFunction);
 
     collectAndAssertTrue(output.equalsByElementData(expected));
   }
@@ -207,7 +209,8 @@ public class SubgraphTest extends GradoopFlinkTestBase {
     );
 
 
-    GraphCollection input = loader.getGraphCollectionByVariables("g0","g1","g4");
+    FlinkGraphCollection
+      input = loader.getGraphCollectionByVariables("g0","g1","g4");
 
 
     FilterFunction<Vertex> vertexFilterFunction = new FilterFunction<Vertex>() {
@@ -270,7 +273,8 @@ public class SubgraphTest extends GradoopFlinkTestBase {
         "]"
     );
 
-    GraphCollection input = loader.getGraphCollectionByVariables("g0","g1","g4");
+    FlinkGraphCollection
+      input = loader.getGraphCollectionByVariables("g0","g1","g4");
 
 
     FilterFunction<Vertex> vertexFilterFunction = new FilterFunction<Vertex>() {
@@ -313,7 +317,8 @@ public class SubgraphTest extends GradoopFlinkTestBase {
       "expected2[]"
     );
 
-    GraphCollection input = loader.getGraphCollectionByVariables("g0","g1","g2");
+    FlinkGraphCollection
+      input = loader.getGraphCollectionByVariables("g0","g1","g2");
 
 
     FilterFunction<Edge> edgeFilterFunction = new FilterFunction<Edge>() {

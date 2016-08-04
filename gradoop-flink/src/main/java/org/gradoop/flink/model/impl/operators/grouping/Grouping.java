@@ -20,21 +20,19 @@ package org.gradoop.flink.model.impl.operators.grouping;
 import com.google.common.collect.Lists;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.operators.UnsortedGrouping;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
 import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.flink.model.api.operators.UnaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.LogicalGraph;
-import org.gradoop.flink.model.impl.operators.grouping.functions
-  .BuildEdgeGroupItem;
-import org.gradoop.flink.model.impl.operators.grouping.functions
-  .CombineEdgeGroupItems;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.flink.model.impl.operators.grouping.functions.BuildEdgeGroupItem;
+import org.gradoop.flink.model.impl.operators.grouping.functions.CombineEdgeGroupItems;
 import org.gradoop.flink.model.impl.operators.grouping.functions.ReduceEdgeGroupItems;
 import org.gradoop.flink.model.impl.operators.grouping.functions.UpdateEdgeGroupItem;
+import org.gradoop.flink.model.impl.operators.grouping.functions.aggregation.PropertyValueAggregator;
 import org.gradoop.flink.model.impl.operators.grouping.tuples.EdgeGroupItem;
 import org.gradoop.flink.model.impl.operators.grouping.tuples.VertexGroupItem;
 import org.gradoop.flink.model.impl.operators.grouping.tuples.VertexWithSuperVertex;
 import org.gradoop.flink.util.GradoopFlinkConfig;
-import org.gradoop.flink.model.impl.operators.grouping.functions.aggregation.PropertyValueAggregator;
-
 
 import java.util.List;
 
@@ -141,7 +139,7 @@ public abstract class Grouping implements UnaryGraphToGraphOperator {
   public LogicalGraph execute(LogicalGraph graph) {
     LogicalGraph result;
 
-    config = graph.getConfig();
+    config = (GradoopFlinkConfig) graph.getConfig();
 
     if (!useVertexProperties() &&
       !useEdgeProperties() &&
@@ -274,8 +272,7 @@ public abstract class Grouping implements UnaryGraphToGraphOperator {
    *                                  and super vertex id
    * @return super edges
    */
-  protected DataSet<Edge> buildSuperEdges(
-    LogicalGraph graph,
+  protected DataSet<Edge> buildSuperEdges(LogicalGraph graph,
     DataSet<VertexWithSuperVertex> vertexToRepresentativeMap) {
 
     DataSet<EdgeGroupItem> edges = graph.getEdges()
@@ -314,8 +311,7 @@ public abstract class Grouping implements UnaryGraphToGraphOperator {
    * @param graph input graph
    * @return grouped output graph
    */
-  protected abstract LogicalGraph groupInternal(
-    LogicalGraph graph);
+  protected abstract LogicalGraph groupInternal(LogicalGraph graph);
 
   /**
    * Used for building a grouping operator instance.

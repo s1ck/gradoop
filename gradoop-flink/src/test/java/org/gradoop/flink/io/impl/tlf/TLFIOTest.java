@@ -17,13 +17,13 @@
 
 package org.gradoop.flink.io.impl.tlf;
 
+import org.gradoop.common.io.api.DataSink;
+import org.gradoop.common.io.api.DataSource;
 import org.gradoop.common.model.api.entities.EPGMVertex;
-import org.gradoop.flink.io.api.DataSink;
-import org.gradoop.flink.io.api.DataSource;
+import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.impl.pojo.GraphTransaction;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.tuples.GraphTransaction;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 
@@ -45,7 +45,7 @@ public class TLFIOTest extends GradoopFlinkTestBase {
 
     FlinkAsciiGraphLoader loader = getLoaderFromString(asciiGraphs);
 
-    GraphCollection originalCollection = loader
+    FlinkGraphCollection originalCollection = loader
       .getGraphCollectionByVariables("g1", "g2");
 
     String filePath =
@@ -68,7 +68,7 @@ public class TLFIOTest extends GradoopFlinkTestBase {
 
     collectAndAssertTrue(
       originalCollection.equalsByGraphData(
-        GraphCollection.fromTransactions(transactions)
+        FlinkGraphCollection.fromTransactions(transactions)
       )
     );
   }
@@ -97,7 +97,7 @@ public class TLFIOTest extends GradoopFlinkTestBase {
 
     collectAndAssertTrue(
       loader.getGraphCollectionByVariables("g1","g2").equalsByGraphData(
-        GraphCollection.fromTransactions(transactions)
+        FlinkGraphCollection.fromTransactions(transactions)
       )
     );
   }
@@ -131,7 +131,7 @@ public class TLFIOTest extends GradoopFlinkTestBase {
 
     collectAndAssertTrue(
       loader.getGraphCollectionByVariables("g1","g2").equalsByGraphData(
-        GraphCollection.fromTransactions(transactions)
+        FlinkGraphCollection.fromTransactions(transactions)
       )
     );
   }

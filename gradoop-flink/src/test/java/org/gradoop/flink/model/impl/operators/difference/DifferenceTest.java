@@ -1,6 +1,7 @@
 package org.gradoop.flink.model.impl.operators.difference;
 
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.operators.base.BinaryCollectionOperatorsTestBase;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
@@ -46,7 +47,7 @@ public class DifferenceTest extends BinaryCollectionOperatorsTestBase {
 
     GraphCollection col01 = loader.getGraphCollectionByVariables("g0", "g1");
 
-    GraphCollection expectation = GraphCollection.createEmptyCollection(config);
+    GraphCollection expectation = FlinkGraphCollection.createEmptyCollection(config);
 
     GraphCollection result = col01.difference(col01);
     checkAssertions(expectation, result, "total");

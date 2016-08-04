@@ -20,15 +20,17 @@ package org.gradoop.flink.algorithms.labelpropagation;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.graph.Graph;
 import org.apache.flink.types.NullValue;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.flink.algorithms.labelpropagation.functions.EdgeToGellyEdgeMapper;
 import org.gradoop.flink.algorithms.labelpropagation.functions.LPVertexJoin;
 import org.gradoop.flink.algorithms.labelpropagation.functions.VertexToGellyVertexMapper;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.properties.PropertyValue;
-import org.gradoop.flink.model.api.operators.UnaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -84,7 +86,8 @@ public abstract class LabelPropagation implements UnaryGraphToGraphOperator {
 
     // create Gelly graph
     Graph<GradoopId, PropertyValue, NullValue> gellyGraph = Graph.fromDataSet(
-      vertices, edges, logicalGraph.getConfig().getExecutionEnvironment());
+      vertices, edges, ((GradoopFlinkConfig) logicalGraph.getConfig())
+        .getExecutionEnvironment());
 
     DataSet<Vertex> labeledVertices = executeInternal(gellyGraph)
       .join(logicalGraph.getVertices())
@@ -92,8 +95,9 @@ public abstract class LabelPropagation implements UnaryGraphToGraphOperator {
       .with(new LPVertexJoin(propertyKey));
 
     // return labeled graph
-    return LogicalGraph.fromDataSets(
-      labeledVertices, logicalGraph.getEdges(), logicalGraph.getConfig());
+    return FlinkLogicalGraph.fromDataSets(
+      labeledVertices, logicalGraph.getEdges(),
+      (GradoopFlinkConfig) logicalGraph.getConfig());
   }
 
   /**

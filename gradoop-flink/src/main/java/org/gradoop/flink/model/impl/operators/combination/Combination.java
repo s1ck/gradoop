@@ -18,11 +18,13 @@
 package org.gradoop.flink.model.impl.operators.combination;
 
 import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.api.operators.BinaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.operators.BinaryGraphToGraphOperator;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Computes the combined graph from two logical graphs.
@@ -50,8 +52,8 @@ public class Combination implements BinaryGraphToGraphOperator {
       .union(secondGraph.getEdges())
       .distinct(new Id<Edge>());
 
-    return LogicalGraph.fromDataSets(
-      newVertexSet, newEdgeSet, firstGraph.getConfig());
+    return FlinkLogicalGraph.fromDataSets(
+      newVertexSet, newEdgeSet, (GradoopFlinkConfig) firstGraph.getConfig());
   }
 
   /**

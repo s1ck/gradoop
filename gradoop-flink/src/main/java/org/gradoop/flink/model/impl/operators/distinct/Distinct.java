@@ -17,11 +17,12 @@
 
 package org.gradoop.flink.model.impl.operators.distinct;
 
-import org.gradoop.flink.model.api.operators
-  .UnaryCollectionToCollectionOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.UnaryCollectionToCollectionOperator;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Returns a distinct collection of logical graphs. Graph heads are compared
@@ -31,12 +32,11 @@ public class Distinct implements UnaryCollectionToCollectionOperator {
 
   @Override
   public GraphCollection execute(GraphCollection collection) {
-    return GraphCollection.fromDataSets(
+    return FlinkGraphCollection.fromDataSets(
       collection.getGraphHeads().distinct(new Id<GraphHead>()),
       collection.getVertices(),
       collection.getEdges(),
-      collection.getConfig()
-    );
+      (GradoopFlinkConfig) collection.getConfig());
   }
 
   @Override

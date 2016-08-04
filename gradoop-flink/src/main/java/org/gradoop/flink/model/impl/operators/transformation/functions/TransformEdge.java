@@ -19,7 +19,7 @@ package org.gradoop.flink.model.impl.operators.transformation.functions;
 
 import org.apache.flink.api.java.functions.FunctionAnnotation;
 import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.flink.model.api.functions.TransformationFunction;
+import org.gradoop.common.model.api.functions.TransformationFunction;
 import org.gradoop.common.model.impl.pojo.EdgeFactory;
 import org.gradoop.common.util.GConstants;
 

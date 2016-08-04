@@ -1,8 +1,7 @@
 package org.gradoop.flink.algorithms.labelpropagation;
 
-import org.gradoop.flink.algorithms.labelpropagation.GradoopLabelPropagation;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.LogicalGraph;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 

@@ -19,14 +19,16 @@ package org.gradoop.flink.model.impl.operators.aggregation;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.impl.pojo.GraphHead;
-import org.gradoop.flink.model.api.functions.ApplyAggregateFunction;
-import org.gradoop.flink.model.api.operators.ApplicableUnaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.common.model.api.functions.ApplyAggregateFunction;
+import org.gradoop.common.model.api.operators.ApplicableUnaryGraphToGraphOperator;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.flink.model.impl.operators.aggregation.functions.LeftOuterPropertySetter;
 import org.gradoop.common.model.impl.properties.PropertyValue;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -72,10 +74,10 @@ public class ApplyAggregation implements ApplicableUnaryGraphToGraphOperator {
         aggregatePropertyKey,
         PropertyValue.create(aggregateFunction.getDefaultValue())));
 
-    return GraphCollection.fromDataSets(graphHeads,
+    return FlinkGraphCollection.fromDataSets(graphHeads,
       collection.getVertices(),
       collection.getEdges(),
-      collection.getConfig());
+      (GradoopFlinkConfig) collection.getConfig());
   }
 
   @Override

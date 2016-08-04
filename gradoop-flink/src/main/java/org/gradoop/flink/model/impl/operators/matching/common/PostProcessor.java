@@ -21,10 +21,12 @@ import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Element;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.MergedGraphIds;
 import org.gradoop.flink.model.impl.functions.utils.IsInstance;
 import org.gradoop.flink.model.impl.functions.utils.RightSide;
@@ -33,7 +35,6 @@ import org.gradoop.flink.util.GradoopFlinkConfig;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.EdgeFactory;
 import org.gradoop.common.model.impl.pojo.VertexFactory;
-import org.gradoop.flink.model.impl.GraphCollection;
 import org.gradoop.flink.model.impl.functions.epgm.EdgeFromIds;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.VertexFromId;
@@ -47,19 +48,19 @@ import org.gradoop.flink.model.impl.operators.matching.simulation.dual.tuples.Fa
 public class PostProcessor {
 
   /**
-   * Extracts a {@link GraphCollection} from a set of {@link Element}.
+   * Extracts a {@link FlinkGraphCollection} from a set of {@link Element}.
    *
    * @param elements  EPGM elements
    * @param config    Gradoop Flink config
    * @return Graph collection
    */
-  public static GraphCollection extractGraphCollection(
+  public static FlinkGraphCollection extractGraphCollection(
     DataSet<Element> elements, GradoopFlinkConfig config) {
     return extractGraphCollection(elements, config, true);
   }
 
   /**
-   * Extracts a {@link GraphCollection} from a set of {@link Element}.
+   * Extracts a {@link FlinkGraphCollection} from a set of {@link Element}.
    *
    * @param elements  EPGM elements
    * @param config        Gradoop Flink config
@@ -67,13 +68,13 @@ public class PostProcessor {
    * @return Graph collection
    */
   @SuppressWarnings("unchecked")
-  public static GraphCollection extractGraphCollection(
+  public static FlinkGraphCollection extractGraphCollection(
     DataSet<Element> elements, GradoopFlinkConfig config, boolean mayOverlap) {
 
     Class<GraphHead> graphHeadType = config.getGraphHeadFactory().getType();
     Class<Vertex> vertexType = config.getVertexFactory().getType();
     Class<Edge> edgeType = config.getEdgeFactory().getType();
-    return GraphCollection.fromDataSets(
+    return FlinkGraphCollection.fromDataSets(
       extractGraphHeads(elements, graphHeadType),
       extractVertices(elements, vertexType, mayOverlap),
       extractEdges(elements, edgeType, mayOverlap),
@@ -82,21 +83,21 @@ public class PostProcessor {
   }
 
   /**
-   * Extracts a {@link GraphCollection} from a set of {@link Element} and
-   * attaches the original data from the input {@link LogicalGraph}.
+   * Extracts a {@link FlinkGraphCollection} from a set of {@link Element} and
+   * attaches the original data from the input {@link FlinkLogicalGraph}.
    *
    * @param elements      EPGM elements
    * @param inputGraph    original input graph
    * @param mayOverlap    true, if elements may be contained in multiple graphs
    * @return Graph collection
    */
-  public static GraphCollection extractGraphCollectionWithData(
+  public static FlinkGraphCollection extractGraphCollectionWithData(
     DataSet<Element> elements, LogicalGraph inputGraph, boolean mayOverlap) {
 
-    GradoopFlinkConfig config = inputGraph.getConfig();
+    GradoopFlinkConfig config = (GradoopFlinkConfig) inputGraph.getConfig();
 
     // get result collection without data
-    GraphCollection collection =
+    FlinkGraphCollection collection =
       extractGraphCollection(elements, config, mayOverlap);
 
     // attach data by joining first and merging the graph head ids
@@ -112,7 +113,7 @@ public class PostProcessor {
       .with(new MergedGraphIds<Edge>())
       .withForwardedFieldsFirst("id;label;properties");
 
-    return GraphCollection.fromDataSets(
+    return FlinkGraphCollection.fromDataSets(
       collection.getGraphHeads(), newVertices, newEdges, config);
   }
   /**

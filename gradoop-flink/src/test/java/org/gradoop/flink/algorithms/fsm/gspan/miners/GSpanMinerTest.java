@@ -11,7 +11,7 @@ import org.gradoop.flink.algorithms.fsm.gspan.pojos.CompressedDFSCode;
 import org.gradoop.flink.algorithms.fsm.gspan.pojos.GSpanGraph;
 import org.gradoop.flink.datagen.transactions.predictable.PredictableTransactionsGenerator;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.GraphTransactions;
+import org.gradoop.flink.model.impl.FlinkGraphTransactions;
 import org.gradoop.flink.model.impl.functions.bool.Equals;
 import org.gradoop.flink.model.impl.operators.count.Count;
 import org.gradoop.flink.model.impl.tuples.WithCount;
@@ -24,7 +24,7 @@ public class GSpanMinerTest extends GradoopFlinkTestBase {
 
   @Test
   public void testMinersSeparatelyDirected() throws Exception {
-    GraphTransactions transactions = new PredictableTransactionsGenerator(
+    FlinkGraphTransactions transactions = new PredictableTransactionsGenerator(
       10, 1, true, getConfig()).execute();
 
     float threshold = 0.2f;
@@ -51,7 +51,7 @@ public class GSpanMinerTest extends GradoopFlinkTestBase {
 
   @Test
   public void testMinersSeparatelyUndirected() throws Exception {
-    GraphTransactions transactions = new PredictableTransactionsGenerator(
+    FlinkGraphTransactions transactions = new PredictableTransactionsGenerator(
       10, 1, true, getConfig()).execute();
 
     float threshold = 0.2f;
@@ -86,7 +86,7 @@ public class GSpanMinerTest extends GradoopFlinkTestBase {
 
   @Test
   public void testMinersVersus() throws Exception {
-    GraphTransactions transactions = new PredictableTransactionsGenerator(
+    FlinkGraphTransactions transactions = new PredictableTransactionsGenerator(
       30, 1, true, getConfig()).execute();
 
     float threshold = 0.4f;

@@ -19,8 +19,10 @@ package org.gradoop.flink.model.impl.operators.aggregation.functions.sum;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.flink.model.impl.operators.aggregation.functions.AggregateWithDefaultValueFunction;
 import org.gradoop.common.model.impl.properties.PropertyValue;

@@ -18,15 +18,17 @@ package org.gradoop.flink.model.impl.operators.equality;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple1;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.tuple.ValueInTuple1;
-import org.gradoop.flink.model.api.operators.BinaryCollectionToValueOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.common.model.api.operators.BinaryCollectionToValueOperator;
 import org.gradoop.flink.model.impl.functions.bool.Not;
 import org.gradoop.flink.model.impl.functions.bool.Or;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.utils.OneSideEmpty;
 import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Operator to determine if two collections contain the same graphs by id.
@@ -54,7 +56,7 @@ public class CollectionEqualityByGraphIds
       .fullOuterJoin(distinctSecondGraphIds)
       .where(0).equalTo(0)
       .with(new OneSideEmpty<Tuple1<GradoopId>, Tuple1<GradoopId>>())
-      .union(firstCollection.getConfig()
+      .union(((GradoopFlinkConfig) firstCollection.getConfig())
         .getExecutionEnvironment()
         .fromElements(false)
       );

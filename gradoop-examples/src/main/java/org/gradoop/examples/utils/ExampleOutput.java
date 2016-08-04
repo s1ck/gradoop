@@ -21,12 +21,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.functions.CrossFunction;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.operators.tostring.CanonicalAdjacencyMatrixBuilder;
 import org.gradoop.flink.model.impl.operators.tostring.functions.EdgeToDataString;
 import org.gradoop.flink.model.impl.operators.tostring.functions.GraphHeadToDataString;
 import org.gradoop.flink.model.impl.operators.tostring.functions.VertexToDataString;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 import java.util.ArrayList;
 
@@ -46,7 +48,7 @@ public class ExampleOutput {
    * @param graph graph
    */
   public void add(String caption, LogicalGraph graph) {
-    add(caption, GraphCollection.fromGraph(graph));
+    add(caption, FlinkGraphCollection.fromGraph(graph));
   }
 
   /**
@@ -57,13 +59,13 @@ public class ExampleOutput {
   public void add(String caption, GraphCollection collection) {
 
     if (outSet == null) {
-      outSet = collection
-        .getConfig().getExecutionEnvironment()
+      outSet = ((GradoopFlinkConfig) collection.getConfig())
+        .getExecutionEnvironment()
         .fromElements(new ArrayList<String>());
     }
 
-    DataSet<String> captionSet = collection
-      .getConfig().getExecutionEnvironment()
+    DataSet<String> captionSet = ((GradoopFlinkConfig) collection.getConfig())
+      .getExecutionEnvironment()
       .fromElements("\n*** " + caption + " ***\n");
 
     DataSet<String> graphStringSet =

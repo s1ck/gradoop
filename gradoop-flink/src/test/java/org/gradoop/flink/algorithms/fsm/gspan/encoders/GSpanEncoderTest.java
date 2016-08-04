@@ -2,6 +2,7 @@ package org.gradoop.flink.algorithms.fsm.gspan.encoders;
 
 
 import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.io.api.DataSink;
 import org.gradoop.flink.algorithms.fsm.config.FSMConfig;
 import org.gradoop.flink.algorithms.fsm.gspan.api.GSpanEncoder;
 import org.gradoop.flink.algorithms.fsm.gspan.api.GSpanMiner;
@@ -12,12 +13,11 @@ import org.gradoop.flink.algorithms.fsm.gspan.pojos.CompressedDFSCode;
 import org.gradoop.flink.algorithms.fsm.gspan.pojos.DFSCode;
 import org.gradoop.flink.algorithms.fsm.gspan.pojos.GSpanGraph;
 import org.gradoop.flink.datagen.transactions.predictable.PredictableTransactionsGenerator;
-import org.gradoop.flink.io.api.DataSink;
 import org.gradoop.flink.io.impl.tlf.TLFDataSink;
 import org.gradoop.flink.io.impl.tlf.TLFDataSource;
 import org.gradoop.flink.io.impl.tlf.tuples.TLFGraph;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.GraphTransactions;
+import org.gradoop.flink.model.impl.FlinkGraphTransactions;
 import org.gradoop.flink.model.impl.tuples.WithCount;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class GSpanEncoderTest extends GradoopFlinkTestBase {
 
   @Test
   public void testPredictableBenchmark() throws Exception {
-    GraphTransactions transactions = new PredictableTransactionsGenerator(
+    FlinkGraphTransactions transactions = new PredictableTransactionsGenerator(
       2, 1, true, getConfig()).execute();
 
     FSMConfig fsmConfig = new FSMConfig(1.0f, true);
@@ -50,7 +50,8 @@ public class GSpanEncoderTest extends GradoopFlinkTestBase {
     DataSet<TLFGraph> graphs = dataSource.getTLFGraphs();
 
     GSpanEncoder<DataSet<TLFGraph>> tlfEncoder = new GSpanTLFGraphEncoder(fsmConfig);
-    GSpanEncoder<GraphTransactions> tnsEncoder = new GSpanGraphTransactionsEncoder(fsmConfig);
+    GSpanEncoder<FlinkGraphTransactions> tnsEncoder = new
+      GSpanGraphTransactionsEncoder(fsmConfig);
     GSpanMiner miner = new GSpanBulkIteration();
 
     miner.setExecutionEnvironment(getExecutionEnvironment());
@@ -86,7 +87,7 @@ public class GSpanEncoderTest extends GradoopFlinkTestBase {
 
     GSpanEncoder<DataSet<TLFGraph>> tlfEncoder =
       new GSpanTLFGraphEncoder(fsmConfig);
-    GSpanEncoder<GraphTransactions> tnsEncoder =
+    GSpanEncoder<FlinkGraphTransactions> tnsEncoder =
       new GSpanGraphTransactionsEncoder(fsmConfig);
     GSpanMiner miner = new GSpanBulkIteration();
 
@@ -95,7 +96,8 @@ public class GSpanEncoderTest extends GradoopFlinkTestBase {
     DataSet<GSpanGraph> tlfSearchSpace =
       tlfEncoder.encode(dataSource.getTLFGraphs(), fsmConfig);
     DataSet<GSpanGraph> tnsSearchSpace =
-      tnsEncoder.encode(dataSource.getGraphTransactions(), fsmConfig);
+      tnsEncoder.encode(
+        (FlinkGraphTransactions) dataSource.getGraphTransactions(), fsmConfig);
 
     assertEquals(tlfSearchSpace.count(), tnsSearchSpace.count());
 
@@ -124,7 +126,8 @@ public class GSpanEncoderTest extends GradoopFlinkTestBase {
     GSpanTLFGraphEncoder tlfEncoder = new GSpanTLFGraphEncoder(fsmConfig);
 
     List<DFSCode> tGraphs = tEncoder
-      .encode(dataSource.getGraphTransactions(), fsmConfig)
+      .encode(
+        (FlinkGraphTransactions) dataSource.getGraphTransactions(), fsmConfig)
       .map(new MinDFSCode(fsmConfig))
       .collect();
 
@@ -171,7 +174,8 @@ public class GSpanEncoderTest extends GradoopFlinkTestBase {
 
     GSpanTLFGraphEncoder tlfEncoder = new GSpanTLFGraphEncoder(fsmConfig);
 
-    tEncoder.encode(dataSource.getGraphTransactions(), fsmConfig);
+    tEncoder.encode(
+      (FlinkGraphTransactions) dataSource.getGraphTransactions(), fsmConfig);
     cEncoder.encode(dataSource.getGraphCollection(), fsmConfig);
     tlfEncoder.encode(dataSource.getTLFGraphs(), fsmConfig);
 
@@ -200,7 +204,8 @@ public class GSpanEncoderTest extends GradoopFlinkTestBase {
 
     GSpanTLFGraphEncoder tlfEncoder = new GSpanTLFGraphEncoder(fsmConfig);
 
-    tEncoder.encode(dataSource.getGraphTransactions(), fsmConfig);
+    tEncoder.encode(
+      (FlinkGraphTransactions) dataSource.getGraphTransactions(), fsmConfig);
     cEncoder.encode(dataSource.getGraphCollection(), fsmConfig);
     tlfEncoder.encode(dataSource.getTLFGraphs(), fsmConfig);
 
@@ -230,7 +235,8 @@ public class GSpanEncoderTest extends GradoopFlinkTestBase {
 
     GSpanTLFGraphEncoder tlfEncoder = new GSpanTLFGraphEncoder(fsmConfig);
 
-    tEncoder.encode(dataSource.getGraphTransactions(), fsmConfig);
+    tEncoder.encode(
+      (FlinkGraphTransactions) dataSource.getGraphTransactions(), fsmConfig);
     cEncoder.encode(dataSource.getGraphCollection(), fsmConfig);
     tlfEncoder.encode(dataSource.getTLFGraphs(), fsmConfig);
 

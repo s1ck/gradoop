@@ -34,7 +34,7 @@ import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.tuple.Value0Of3;
 import org.gradoop.flink.model.impl.tuples.WithCount;
 import org.gradoop.flink.util.GradoopFlinkConfig;
@@ -46,7 +46,7 @@ import java.util.List;
  * Turns the gSpan result into a EPGM graph collection
  */
 public class GSpanGraphCollectionDecoder implements
-  GSpanDecoder<GraphCollection> {
+  GSpanDecoder<FlinkGraphCollection> {
 
   /**
    * Gradoop configuration
@@ -64,7 +64,7 @@ public class GSpanGraphCollectionDecoder implements
   }
 
   @Override
-  public GraphCollection decode(
+  public FlinkGraphCollection decode(
     DataSet<WithCount<CompressedDFSCode>> frequentSubgraphs,
     DataSet<List<String>> vertexLabelDictionary,
     DataSet<List<String>> edgeLabelDictionary) {
@@ -93,7 +93,7 @@ public class GSpanGraphCollectionDecoder implements
       .map(new FullEdge<>(config.getEdgeFactory()))
       .returns(config.getEdgeFactory().getType());
 
-    return GraphCollection
+    return FlinkGraphCollection
       .fromDataSets(graphHeads, vertices, edges, config);
   }
 }

@@ -21,13 +21,14 @@ import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.io.api.DataSource;
+import org.gradoop.common.io.api.DataSource;
 import org.gradoop.flink.io.impl.json.functions.JSONToEdge;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.operators.combination.ReduceCombination;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 import org.gradoop.flink.io.impl.json.functions.JSONToGraphHead;
@@ -63,13 +64,13 @@ public class JSONDataSource extends JSONBase implements DataSource {
     ExecutionEnvironment env = getConfig().getExecutionEnvironment();
 
     // used for type hinting when loading vertex data
-    TypeInformation vertexTypeInfo = TypeExtractor
+    TypeInformation<Vertex> vertexTypeInfo = TypeExtractor
       .createTypeInfo(getConfig().getVertexFactory().getType());
     // used for type hinting when loading edge data
-    TypeInformation edgeTypeInfo = TypeExtractor
+    TypeInformation<Edge> edgeTypeInfo = TypeExtractor
       .createTypeInfo(getConfig().getEdgeFactory().getType());
     // used for type hinting when loading graph data
-    TypeInformation graphTypeInfo = TypeExtractor
+    TypeInformation<GraphHead> graphTypeInfo = TypeExtractor
       .createTypeInfo(getConfig().getGraphHeadFactory().getType());
 
     // read vertex, edge and graph data
@@ -89,7 +90,7 @@ public class JSONDataSource extends JSONBase implements DataSource {
         getConfig().getGraphHeadFactory().createGraphHead());
     }
 
-    return GraphCollection.fromDataSets(
+    return FlinkGraphCollection.fromDataSets(
       graphHeads, vertices, edges, getConfig());
   }
 

@@ -60,8 +60,9 @@ public class LogicalGraphTest extends GradoopFlinkTestBase {
     DataSet<Edge> edgeDataSet = getExecutionEnvironment()
       .fromCollection(edges);
 
-    LogicalGraph graph =
-      LogicalGraph.fromDataSets(graphHeadDataSet, vertexDataSet, edgeDataSet, getConfig());
+    FlinkLogicalGraph graph =
+      FlinkLogicalGraph
+        .fromDataSets(graphHeadDataSet, vertexDataSet, edgeDataSet, getConfig());
 
     Collection<GraphHead> loadedGraphHeads  = Lists.newArrayList();
     Collection<Vertex> loadedVertices       = Lists.newArrayList();
@@ -90,8 +91,8 @@ public class LogicalGraphTest extends GradoopFlinkTestBase {
 
     GraphHead graphHead = loader.getGraphHeadByVariable("g0");
 
-    LogicalGraph graph =
-      LogicalGraph.fromCollections(graphHead,
+    FlinkLogicalGraph graph =
+      FlinkLogicalGraph.fromCollections(graphHead,
         loader.getVerticesByGraphVariables("g0"),
         loader.getEdgesByGraphVariables("g0"),
         getConfig());
@@ -131,8 +132,8 @@ public class LogicalGraphTest extends GradoopFlinkTestBase {
     FlinkAsciiGraphLoader
       loader = getLoaderFromString("()-->()<--()-->()");
 
-    LogicalGraph logicalGraph =
-      LogicalGraph.fromDataSets(
+    FlinkLogicalGraph logicalGraph =
+      FlinkLogicalGraph.fromDataSets(
         getExecutionEnvironment().fromCollection(loader.getVertices()),
         getExecutionEnvironment().fromCollection(loader.getEdges()),
         getConfig());
@@ -242,7 +243,7 @@ public class LogicalGraphTest extends GradoopFlinkTestBase {
     FlinkAsciiGraphLoader
       loader = getSocialNetworkLoader();
 
-    LogicalGraph g0 =
+    FlinkLogicalGraph g0 =
       loader.getLogicalGraphByVariable(graphVariable);
 
     Vertex v = loader.getVertexByVariable(vertexVariable);

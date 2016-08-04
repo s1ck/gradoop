@@ -21,14 +21,16 @@ import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.graph.Graph;
 import org.apache.flink.types.NullValue;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.flink.algorithms.btgs.functions.MasterData;
 import org.gradoop.flink.algorithms.btgs.functions.NewBtgGraphHead;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.api.operators.UnaryGraphToCollectionOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.operators.UnaryGraphToCollectionOperator;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.algorithms.btgs.functions.ComponentToNewBtgId;
 import org.gradoop.flink.algorithms.btgs.functions.BtgMessenger;
 import org.gradoop.flink.algorithms.btgs.functions.BtgUpdater;
@@ -47,6 +49,7 @@ import org.gradoop.flink.model.impl.functions.tuple.SwitchPair;
 import org.gradoop.flink.model.impl.functions.tuple.Value0Of2;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.id.GradoopIdSet;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Part of the BIIIG approach.
@@ -94,7 +97,7 @@ public class BusinessTransactionGraphs implements
     Graph<GradoopId, GradoopId, NullValue> gellyTransGraph = Graph.fromDataSet(
       transVertices.map(new ToGellyVertexWithIdValue()),
       transEdges,
-      iig.getConfig().getExecutionEnvironment()
+      ((GradoopFlinkConfig) iig.getConfig()).getExecutionEnvironment()
     );
 
     gellyTransGraph = gellyTransGraph
@@ -146,12 +149,11 @@ public class BusinessTransactionGraphs implements
       .where(new Id<Vertex>()).equalTo(0)
       .with(new SetBtgIds<Vertex>());
 
-    return GraphCollection.fromDataSets(
+    return FlinkGraphCollection.fromDataSets(
       graphHeads,
       transVertices.union(masterVertices),
       btgEdges,
-      iig.getConfig()
-    );
+      (GradoopFlinkConfig) iig.getConfig());
   }
 
   @Override

@@ -17,8 +17,8 @@
 
 package org.gradoop.flink.model.impl.operators.aggregation.functions;
 
-import org.gradoop.flink.model.api.functions.AggregateFunction;
-import org.gradoop.flink.model.api.functions.ApplyAggregateFunction;
+import org.gradoop.common.model.api.functions.AggregateFunction;
+import org.gradoop.common.model.api.functions.ApplyAggregateFunction;
 
 /**
  * Aggregation function for which a default value can be

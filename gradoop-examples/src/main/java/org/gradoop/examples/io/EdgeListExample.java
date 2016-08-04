@@ -24,12 +24,13 @@ import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.DataSetUtils;
-import org.gradoop.flink.io.api.DataSource;
+import org.gradoop.common.io.api.DataSource;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.flink.io.impl.graph.GraphDataSource;
 import org.gradoop.flink.io.impl.graph.tuples.ImportEdge;
 import org.gradoop.flink.io.impl.graph.tuples.ImportVertex;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
@@ -55,7 +56,7 @@ public class EdgeListExample implements ProgramDescription {
 
   /**
    * Reads the edge list from the given file and transforms it into an
-   * {@link LogicalGraph}.
+   * {@link FlinkLogicalGraph}.
    *
    * args[0]: path to ede list file (can be stored in local FS or HDFS)
    * args[1]: token separator (optional, default is single whitespace)

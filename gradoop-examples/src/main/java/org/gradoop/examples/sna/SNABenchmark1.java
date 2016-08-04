@@ -21,12 +21,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import org.apache.flink.api.common.ProgramDescription;
 import org.apache.flink.api.common.functions.FilterFunction;
-import org.gradoop.examples.AbstractRunner;
-import org.gradoop.flink.model.impl.LogicalGraph;
-import org.gradoop.flink.model.impl.operators.aggregation.functions.count.EdgeCount;
-import org.gradoop.flink.model.impl.operators.aggregation.functions.count.VertexCount;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.examples.AbstractRunner;
+import org.gradoop.flink.model.impl.operators.aggregation.functions.count.EdgeCount;
+import org.gradoop.flink.model.impl.operators.aggregation.functions.count.VertexCount;
 
 /**
  * The benchmark program executes the following workflow:
@@ -80,8 +80,7 @@ public class SNABenchmark1 extends AbstractRunner implements
    * @param socialNetwork social network graph
    * @return summarized, aggregated graph
    */
-  private static LogicalGraph
-  execute(LogicalGraph socialNetwork) {
+  private static LogicalGraph execute(LogicalGraph socialNetwork) {
     return socialNetwork
       .subgraph(
         new FilterFunction<Vertex>() {

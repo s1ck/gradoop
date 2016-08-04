@@ -1,9 +1,7 @@
 package org.gradoop.flink.algorithms.fsm.gspan;
 
 import com.google.common.collect.Lists;
-import org.gradoop.flink.algorithms.fsm.gspan.GSpan;
-import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.flink.algorithms.fsm.config.FSMConfig;
 import org.gradoop.flink.algorithms.fsm.gspan.api.GSpanEncoder;
 import org.gradoop.flink.algorithms.fsm.gspan.encoders.GSpanGraphCollectionEncoder;
@@ -11,6 +9,8 @@ import org.gradoop.flink.algorithms.fsm.gspan.pojos.DFSCode;
 import org.gradoop.flink.algorithms.fsm.gspan.pojos.DFSStep;
 import org.gradoop.flink.algorithms.fsm.gspan.pojos.DirectedDFSStep;
 import org.gradoop.flink.algorithms.fsm.gspan.pojos.GSpanGraph;
+import org.gradoop.flink.model.GradoopFlinkTestBase;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 
@@ -63,7 +63,7 @@ public class GSpanTest extends GradoopFlinkTestBase {
 
     FlinkAsciiGraphLoader loader = getLoaderFromString(asciiGraphs);
 
-    GraphCollection searchSpace = loader.getGraphCollectionByVariables("g1");
+    FlinkGraphCollection searchSpace = loader.getGraphCollectionByVariables("g1");
 
     float threshold = 0.7f;
     FSMConfig fsmConfig = new FSMConfig(threshold, true);

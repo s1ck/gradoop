@@ -25,16 +25,16 @@ import org.apache.flink.api.java.typeutils.TupleTypeInfo;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.io.impl.graph.functions.UpdateEdge;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkGraphTransactions;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.tuple.Value2Of3;
 import org.gradoop.flink.util.GradoopFlinkConfig;
-import org.gradoop.flink.io.api.DataSource;
+import org.gradoop.common.io.api.DataSource;
 import org.gradoop.flink.io.impl.graph.functions.InitVertex;
 import org.gradoop.flink.io.impl.graph.functions.InitEdge;
 import org.gradoop.flink.io.impl.graph.tuples.ImportEdge;
 import org.gradoop.flink.io.impl.graph.tuples.ImportVertex;
-import org.gradoop.flink.model.impl.GraphCollection;
 import org.gradoop.flink.model.impl.functions.tuple.Project3To0And1;
 import org.gradoop.common.model.impl.id.GradoopId;
 
@@ -46,7 +46,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Transforms an external graph into an EPGM database. The external graph needs
  * to be represented by a data set of {@link ImportVertex} and a data set of
  * {@link ImportEdge}. This class transforms the external graph into an EPGM
- * {@link LogicalGraph}.
+ * {@link FlinkLogicalGraph}.
  *
  * @param <K> External vertex/edge identifier type
  */
@@ -113,7 +113,7 @@ public class GraphDataSource<K extends Comparable<K>> implements DataSource {
    * @return logical graph
    */
   @Override
-  public LogicalGraph getLogicalGraph() {
+  public FlinkLogicalGraph getLogicalGraph() {
 
     TypeInformation<K> externalIdType = ((TupleTypeInfo<?>) importVertices
       .getType()).getTypeAt(0);
@@ -137,16 +137,16 @@ public class GraphDataSource<K extends Comparable<K>> implements DataSource {
       .where(0).equalTo(0)
       .with(new UpdateEdge<Edge, K>());
 
-    return LogicalGraph.fromDataSets(epgmVertices, epgmEdges, config);
+    return FlinkLogicalGraph.fromDataSets(epgmVertices, epgmEdges, config);
   }
 
   @Override
-  public GraphCollection getGraphCollection() throws IOException {
-    return GraphCollection.fromGraph(getLogicalGraph());
+  public FlinkGraphCollection getGraphCollection() throws IOException {
+    return FlinkGraphCollection.fromGraph(getLogicalGraph());
   }
 
   @Override
-  public GraphTransactions getGraphTransactions() throws IOException {
+  public FlinkGraphTransactions getGraphTransactions() throws IOException {
     return getGraphCollection().toTransactions();
   }
 }

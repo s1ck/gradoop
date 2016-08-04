@@ -18,8 +18,11 @@
 package org.gradoop.flink.model.impl.operators.exclusion;
 
 import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.ByDifferentId;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.graphcontainment.InGraph;
@@ -27,9 +30,10 @@ import org.gradoop.flink.model.impl.functions.graphcontainment.NotInGraphsBroadc
 
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.api.operators.ReducibleBinaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.common.model.api.operators.ReducibleBinaryGraphToGraphOperator;
+
 import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Computes the exclusion graph from a collection of logical graphs.
@@ -76,11 +80,10 @@ public class ReduceExclusion implements ReducibleBinaryGraphToGraphOperator {
       .filter(new NotInGraphsBroadcast<Edge>())
       .withBroadcastSet(excludedGraphIds, NotInGraphsBroadcast.GRAPH_IDS);
 
-    return LogicalGraph.fromDataSets(
+    return FlinkLogicalGraph.fromDataSets(
       vertices,
       edges,
-      collection.getConfig()
-    );
+      (GradoopFlinkConfig) collection.getConfig());
   }
 
   @Override

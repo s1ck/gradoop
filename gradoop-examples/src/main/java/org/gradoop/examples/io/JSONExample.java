@@ -19,18 +19,20 @@ package org.gradoop.examples.io;
 
 import org.apache.flink.api.common.ProgramDescription;
 import org.apache.flink.api.java.ExecutionEnvironment;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.examples.AbstractRunner;
 import org.gradoop.flink.io.impl.json.JSONDataSink;
 import org.gradoop.flink.io.impl.json.JSONDataSource;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.operators.combination.ReduceCombination;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Example program that reads a graph from an EPGM-specific JSON representation
- * into a {@link GraphCollection}, does some computation and stores the
- * resulting {@link LogicalGraph} as JSON.
+ * into a {@link FlinkGraphCollection}, does some computation and stores the
+ * resulting {@link FlinkLogicalGraph} as JSON.
  *
  * In the JSON representation, an EPGM graph collection (or Logical Graph) is
  * stored in three (or two) separate files. Each line in those files contains

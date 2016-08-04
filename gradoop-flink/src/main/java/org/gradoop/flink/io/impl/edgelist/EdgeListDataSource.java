@@ -22,22 +22,22 @@ import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple4;
 import org.apache.flink.api.java.utils.DataSetUtils;
+import org.gradoop.common.io.api.DataSource;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.flink.io.impl.edgelist.functions.CreateImportEdge;
 import org.gradoop.flink.io.impl.edgelist.functions.CreateImportVertex;
 import org.gradoop.flink.io.impl.graph.GraphDataSource;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.LogicalGraph;
-import org.gradoop.flink.model.impl.operators.combination.ReduceCombination;
-import org.gradoop.flink.util.GradoopFlinkConfig;
-import org.gradoop.flink.io.api.DataSource;
 import org.gradoop.flink.io.impl.graph.tuples.ImportEdge;
 import org.gradoop.flink.io.impl.graph.tuples.ImportVertex;
-import org.gradoop.flink.io.impl.edgelist.functions.CreateImportEdge;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.flink.model.impl.operators.combination.ReduceCombination;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 import java.io.IOException;
 
 /**
- * Class to create a LogicalGraph from EdgeList source file.
+ * Class to create a FlinkLogicalGraph from EdgeList source file.
  *
  * e.g.
  * 0 EN 1 ZH

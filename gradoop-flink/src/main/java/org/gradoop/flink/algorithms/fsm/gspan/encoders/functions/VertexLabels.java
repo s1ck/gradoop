@@ -21,7 +21,7 @@ import com.google.common.collect.Sets;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.util.Collector;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.tuples.GraphTransaction;
+import org.gradoop.common.model.impl.pojo.GraphTransaction;
 
 import java.util.Set;
 
@@ -30,12 +30,11 @@ import java.util.Set;
  *
  * flatmaps a vertex collection to distinct vertex labels
  */
-public class VertexLabels
-  implements FlatMapFunction<GraphTransaction, String> {
+public class VertexLabels implements FlatMapFunction<GraphTransaction, String> {
 
   @Override
-  public void flatMap(GraphTransaction transaction,
-    Collector<String> collector) throws Exception {
+  public void flatMap(GraphTransaction transaction, Collector<String> collector)
+      throws Exception {
 
     Set<String> labels = Sets.newHashSet();
 

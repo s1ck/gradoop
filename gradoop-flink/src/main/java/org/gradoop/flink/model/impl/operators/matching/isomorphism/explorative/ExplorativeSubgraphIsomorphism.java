@@ -25,15 +25,19 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.typeutils.TupleTypeInfo;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 import org.apache.log4j.Logger;
+import org.gradoop.common.config.GradoopConfig;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Element;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.GraphHeadFactory;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.pojo.VertexFactory;
-import org.gradoop.flink.model.api.operators.UnaryGraphToCollectionOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.operators.UnaryGraphToCollectionOperator;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.VertexFromId;
 import org.gradoop.flink.model.impl.functions.tuple.ObjectTo1;
@@ -145,9 +149,8 @@ public class ExplorativeSubgraphIsomorphism extends PatternMatching implements
   }
 
   @Override
-  protected GraphCollection executeForVertex(
-    LogicalGraph graph) {
-    GradoopFlinkConfig config = graph.getConfig();
+  protected GraphCollection executeForVertex(LogicalGraph graph) {
+    GradoopFlinkConfig config = (GradoopFlinkConfig) graph.getConfig();
     GraphHeadFactory graphHeadFactory = config.getGraphHeadFactory();
     VertexFactory vertexFactory = config.getVertexFactory();
 
@@ -167,15 +170,14 @@ public class ExplorativeSubgraphIsomorphism extends PatternMatching implements
         TypeExtractor.getForClass(vertexFactory.getType()),
         TypeExtractor.getForClass(graphHeadFactory.getType())));
 
-    return GraphCollection.fromDataSets(
+    return FlinkGraphCollection.fromDataSets(
       pairs.map(new Value1Of2<Vertex, GraphHead>()),
       pairs.map(new Value0Of2<Vertex, GraphHead>()),
       config);
   }
 
   @Override
-  protected GraphCollection executeForPattern(
-    LogicalGraph graph) {
+  protected GraphCollection executeForPattern(LogicalGraph graph) {
 
     //--------------------------------------------------------------------------
     // Pre-processing (filter candidates + build initial embeddings)
@@ -211,16 +213,18 @@ public class ExplorativeSubgraphIsomorphism extends PatternMatching implements
     // Post-Processing (build Graph Collection from embeddings)
     //--------------------------------------------------------------------------
 
+    GradoopFlinkConfig config = (GradoopFlinkConfig) graph.getConfig();
+
     DataSet<Element> elements = result
       .<Tuple1<Embedding>>project(0)
       .flatMap(new ElementsFromEmbedding(traversalCode,
-        graph.getConfig().getGraphHeadFactory(),
-        graph.getConfig().getVertexFactory(),
-        graph.getConfig().getEdgeFactory()));
+        config.getGraphHeadFactory(),
+        config.getVertexFactory(),
+        config.getEdgeFactory()));
 
     return doAttachData() ?
       PostProcessor.extractGraphCollectionWithData(elements, graph, true) :
-      PostProcessor.extractGraphCollection(elements, graph.getConfig(), true);
+      PostProcessor.extractGraphCollection(elements, config, true);
   }
 
   /**

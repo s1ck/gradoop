@@ -18,22 +18,23 @@
 package org.gradoop.flink.algorithms.fsm.gspan.encoders;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.flink.model.impl.GraphTransactions;
+import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.flink.algorithms.fsm.config.BroadcastNames;
 import org.gradoop.flink.algorithms.fsm.config.FSMConfig;
 import org.gradoop.flink.algorithms.fsm.gspan.api.GSpanEncoder;
 import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.Dictionary;
-import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.EdgeLabelsEncoder;
 import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.EdgeLabels;
+import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.EdgeLabelsEncoder;
 import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.InverseDictionary;
 import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.MinFrequency;
-import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.VertexLabelsEncoder;
 import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.VertexLabels;
+import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.VertexLabelsEncoder;
 import org.gradoop.flink.algorithms.fsm.gspan.encoders.tuples.EdgeTripleWithStringEdgeLabel;
 import org.gradoop.flink.algorithms.fsm.gspan.functions.Frequent;
 import org.gradoop.flink.algorithms.fsm.gspan.pojos.GSpanGraph;
+import org.gradoop.flink.model.impl.FlinkGraphTransactions;
 import org.gradoop.flink.model.impl.functions.utils.AddCount;
-import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.flink.model.impl.operators.count.Count;
 
 import java.util.Collection;
@@ -46,7 +47,7 @@ import java.util.Map;
  * filter vertices and edges
  */
 public class GSpanGraphTransactionsEncoder implements
-  GSpanEncoder<GraphTransactions> {
+  GSpanEncoder<FlinkGraphTransactions> {
 
   /**
    * minimum support
@@ -85,7 +86,7 @@ public class GSpanGraphTransactionsEncoder implements
    * @return pruned and relabelled edges
    */
   @Override
-  public DataSet<GSpanGraph> encode(GraphTransactions transactions,
+  public DataSet<GSpanGraph> encode(FlinkGraphTransactions transactions,
     FSMConfig fsmConfig) {
 
     setMinFrequency(transactions, fsmConfig);
@@ -103,8 +104,8 @@ public class GSpanGraphTransactionsEncoder implements
    * @param transactions input graph transactions
    * @param fsmConfig FSM configuration
    */
-  private void setMinFrequency(
-    GraphTransactions transactions, FSMConfig fsmConfig) {
+  private void setMinFrequency(GraphTransactions transactions,
+    FSMConfig fsmConfig) {
 
     this.minFrequency = Count
       .count(transactions.getTransactions())
@@ -148,7 +149,7 @@ public class GSpanGraphTransactionsEncoder implements
    * @return pruned and relabelled edges
    */
   private DataSet<Collection<EdgeTripleWithStringEdgeLabel<GradoopId>>>
-  encodeVertices(GraphTransactions transactions) {
+  encodeVertices(FlinkGraphTransactions transactions) {
 
     vertexLabelDictionary = transactions
       .getTransactions()

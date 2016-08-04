@@ -35,11 +35,13 @@
 package org.gradoop.flink.model.impl.operators.overlap;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.common.model.impl.pojo.GraphHead;
-import org.gradoop.flink.model.api.operators.BinaryGraphToGraphOperator;
+import org.gradoop.common.model.api.operators.BinaryGraphToGraphOperator;
 import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Computes the overlap graph from two logical graphs.
@@ -56,17 +58,17 @@ public class Overlap extends OverlapBase implements BinaryGraphToGraphOperator {
    * @return graph with overlapping elements from both input graphs
    */
   @Override
-  public LogicalGraph execute(
-    LogicalGraph firstGraph, LogicalGraph secondGraph) {
+  public LogicalGraph execute(LogicalGraph firstGraph,
+    LogicalGraph secondGraph) {
 
     DataSet<GradoopId> graphIds = firstGraph.getGraphHead()
       .map(new Id<GraphHead>())
       .union(secondGraph.getGraphHead().map(new Id<GraphHead>()));
 
-    return LogicalGraph.fromDataSets(
+    return FlinkLogicalGraph.fromDataSets(
       getVertices(firstGraph.getVertices(), graphIds),
       getEdges(firstGraph.getEdges(), graphIds),
-      firstGraph.getConfig());
+      (GradoopFlinkConfig) firstGraph.getConfig());
   }
 
   /**

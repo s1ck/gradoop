@@ -19,12 +19,13 @@ package org.gradoop.flink.model.impl.operators.transformation;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.api.functions.TransformationFunction;
-import org.gradoop.flink.model.api.operators.UnaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.functions.TransformationFunction;
+import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.operators.transformation.functions.TransformEdge;
 import org.gradoop.flink.model.impl.operators.transformation.functions.TransformGraphHead;
 import org.gradoop.flink.model.impl.operators.transformation.functions.TransformVertex;
@@ -82,7 +83,7 @@ public class Transformation implements UnaryGraphToGraphOperator {
       graph.getGraphHead(),
       graph.getVertices(),
       graph.getEdges(),
-      graph.getConfig());
+      (GradoopFlinkConfig) graph.getConfig());
   }
 
   /**
@@ -95,7 +96,7 @@ public class Transformation implements UnaryGraphToGraphOperator {
    * @return transformed logical graph
    */
   @SuppressWarnings("unchecked")
-  protected LogicalGraph executeInternal(DataSet<GraphHead> graphHeads,
+  protected FlinkLogicalGraph executeInternal(DataSet<GraphHead> graphHeads,
     DataSet<Vertex> vertices, DataSet<Edge> edges, GradoopFlinkConfig config) {
 
     DataSet<GraphHead> transformedGraphHeads = graphHeadTransFunc != null ?
@@ -116,7 +117,7 @@ public class Transformation implements UnaryGraphToGraphOperator {
         .returns(TypeExtractor.createTypeInfo(
           config.getEdgeFactory().getType())) : edges;
 
-    return LogicalGraph.fromDataSets(
+    return FlinkLogicalGraph.fromDataSets(
       transformedGraphHeads,
       transformedVertices,
       transformedEdges,

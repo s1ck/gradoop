@@ -19,13 +19,13 @@ package org.gradoop.flink.io.impl.json;
 
 import com.google.common.collect.Lists;
 import org.apache.flink.api.java.io.LocalCollectionOutputFormat;
+import org.gradoop.common.io.api.DataSource;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.io.api.DataSource;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Rule;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class JSONIOTest extends GradoopFlinkTestBase {
 
   @Test
   public void testGetDatabaseGraph() throws Exception {
-    LogicalGraph dbGraph = getSocialNetworkLoader()
+    FlinkLogicalGraph dbGraph = getSocialNetworkLoader()
       .getDatabase().getDatabaseGraph();
 
     assertNotNull("database graph was null", dbGraph);
@@ -74,8 +74,7 @@ public class JSONIOTest extends GradoopFlinkTestBase {
     DataSource dataSource = new JSONDataSource(
       graphFile, vertexFile, edgeFile, config);
 
-    GraphCollection
-      collection = dataSource.getGraphCollection();
+    GraphCollection collection = dataSource.getGraphCollection();
 
     Collection<GraphHead> graphHeads = Lists.newArrayList();
     Collection<Vertex> vertices = Lists.newArrayList();

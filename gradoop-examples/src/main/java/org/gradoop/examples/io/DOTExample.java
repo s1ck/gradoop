@@ -23,12 +23,13 @@ import org.gradoop.examples.AbstractRunner;
 import org.gradoop.flink.io.impl.dot.functions.DOTFileFormat;
 import org.gradoop.flink.io.impl.dot.DOTDataSink;
 import org.gradoop.flink.io.impl.json.JSONDataSource;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Example program that reads a graph from an EPGM-specific JSON representation
- * into a {@link org.gradoop.flink.model.impl.GraphCollection} and stores the
- * resulting {@link org.gradoop.flink.model.impl.GraphCollection} as DOT.
+ * into a {@link FlinkGraphCollection} and stores the
+ * resulting {@link FlinkGraphCollection} as DOT.
  * The resulting format is described in {@link DOTFileFormat}.
  */
 public class DOTExample extends AbstractRunner implements ProgramDescription {

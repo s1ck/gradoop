@@ -19,14 +19,12 @@ package org.gradoop.flink.model.impl.operators.cloning;
 
 import com.google.common.collect.Lists;
 import org.apache.flink.api.java.io.LocalCollectionOutputFormat;
-import org.gradoop.common.model.api.entities.EPGMGraphHead;
-import org.gradoop.common.model.api.entities.EPGMVertex;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.common.model.api.entities.EPGMEdge;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.IdAsIdSet;
 import org.gradoop.flink.model.impl.functions.graphcontainment.ExpandGraphsToIdSet;
@@ -55,7 +53,7 @@ public class CloningTest extends GradoopFlinkTestBase {
     List<GradoopId> expectedEdgeIds = Lists.newArrayList();
 
 
-    LogicalGraph original = loader.getLogicalGraphByVariable("org");
+    FlinkLogicalGraph original = loader.getLogicalGraphByVariable("org");
 
     original.getGraphHead().map(new Id<GraphHead>()).output(
       new LocalCollectionOutputFormat<>(expectedGraphHeadIds));

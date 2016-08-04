@@ -23,18 +23,18 @@ import org.apache.commons.io.IOUtils;
 import org.apache.flink.api.common.ProgramDescription;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.java.ExecutionEnvironment;
+import org.gradoop.common.model.api.functions.TransformationFunction;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.examples.AbstractRunner;
 import org.gradoop.examples.utils.ExampleOutput;
-import org.gradoop.flink.model.api.functions.TransformationFunction;
-import org.gradoop.flink.model.impl.LogicalGraph;
 import org.gradoop.flink.algorithms.labelpropagation.GellyLabelPropagation;
 import org.gradoop.flink.model.impl.operators.aggregation.ApplyAggregation;
 import org.gradoop.flink.model.impl.operators.aggregation.functions.count.EdgeCount;
 import org.gradoop.flink.model.impl.operators.aggregation.functions.count.VertexCount;
 import org.gradoop.flink.model.impl.operators.combination.ReduceCombination;
-import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
@@ -163,8 +163,7 @@ public class SNABenchmark2 extends AbstractRunner implements
    * @param threshold     used in community selection predicate
    * @return summarized, aggregated graph
    */
-  private static LogicalGraph
-  execute(LogicalGraph socialNetwork,
+  private static LogicalGraph execute(LogicalGraph socialNetwork,
     final int threshold) {
 
     final int maxIterations   = 4;

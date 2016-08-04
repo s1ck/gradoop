@@ -23,6 +23,10 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.hadoop.hbase.mapreduce.TableOutputFormat;
 import org.apache.hadoop.mapreduce.Job;
+import org.gradoop.common.io.api.DataSink;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.id.GradoopIdSet;
 import org.gradoop.common.model.impl.pojo.Edge;
@@ -32,20 +36,8 @@ import org.gradoop.common.storage.api.PersistentEdge;
 import org.gradoop.common.storage.api.PersistentGraphHead;
 import org.gradoop.common.storage.api.PersistentVertex;
 import org.gradoop.common.storage.impl.hbase.HBaseEPGMStore;
-import org.gradoop.flink.io.api.DataSink;
-import org.gradoop.flink.io.impl.hbase.functions.BuildEdgeMutation;
-import org.gradoop.flink.io.impl.hbase.functions.BuildGraphHeadMutation;
-import org.gradoop.flink.io.impl.hbase.functions.BuildGraphTransactions;
-import org.gradoop.flink.io.impl.hbase.functions.BuildPersistentEdge;
-import org.gradoop.flink.io.impl.hbase.functions.BuildPersistentGraphHead;
-import org.gradoop.flink.io.impl.hbase.functions.BuildPersistentVertex;
-import org.gradoop.flink.io.impl.hbase.functions.BuildVertexDataWithEdges;
-import org.gradoop.flink.io.impl.hbase.functions.BuildVertexMutation;
-import org.gradoop.flink.io.impl.hbase.functions.EdgeSetBySourceId;
-import org.gradoop.flink.io.impl.hbase.functions.EdgeSetByTargetId;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.io.impl.hbase.functions.*;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.SourceId;
 import org.gradoop.flink.model.impl.functions.epgm.TargetId;
@@ -75,7 +67,7 @@ public class HBaseDataSink extends HBaseBase<GraphHead, Vertex, Edge>
 
   @Override
   public void write(LogicalGraph logicalGraph) throws IOException {
-    write(GraphCollection.fromGraph(logicalGraph));
+    write(FlinkGraphCollection.fromGraph(logicalGraph));
   }
 
   @Override
@@ -93,7 +85,7 @@ public class HBaseDataSink extends HBaseBase<GraphHead, Vertex, Edge>
 
   @Override
   public void write(GraphTransactions graphTransactions) throws IOException {
-    write(GraphCollection.fromTransactions(graphTransactions));
+    write(FlinkGraphCollection.fromTransactions(graphTransactions));
   }
 
   /**

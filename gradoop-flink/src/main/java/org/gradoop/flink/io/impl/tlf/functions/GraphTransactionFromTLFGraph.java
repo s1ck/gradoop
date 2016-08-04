@@ -21,6 +21,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.io.impl.tlf.tuples.TLFEdge;
@@ -33,7 +34,7 @@ import org.gradoop.common.model.impl.pojo.GraphHeadFactory;
 import org.gradoop.common.model.impl.pojo.VertexFactory;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.id.GradoopIdSet;
-import org.gradoop.flink.model.impl.tuples.GraphTransaction;
+import org.gradoop.common.model.impl.pojo.GraphTransaction;
 
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +43,8 @@ import java.util.Set;
  * Reads a tlf graph. The result of the mapping is a GraphTransaction.
  */
 public class GraphTransactionFromTLFGraph implements
-  MapFunction<TLFGraph, GraphTransaction> {
+  MapFunction<TLFGraph, GraphTransaction>,
+  ResultTypeQueryable<GraphTransaction> {
 
   /**
    * Creates graph data objects

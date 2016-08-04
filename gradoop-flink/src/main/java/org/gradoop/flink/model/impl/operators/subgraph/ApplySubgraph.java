@@ -20,11 +20,13 @@ import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple4;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.api.operators
-  .ApplicableUnaryGraphToGraphOperator;
+import org.gradoop.common.model.api.operators.ApplicableUnaryGraphToGraphOperator;
+
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.tuple.Project2To1;
 import org.gradoop.flink.model.impl.operators.split.functions.InitGraphHead;
 import org.gradoop.flink.model.impl.operators.subgraph.functions
@@ -34,7 +36,6 @@ import org.gradoop.flink.model.impl.operators.subgraph.functions.JoinWithTargetG
 import org.gradoop.flink.model.impl.operators.subgraph.functions.SourceTargetIdGraphsTuple;
 
 import org.gradoop.common.model.impl.pojo.GraphHeadFactory;
-import org.gradoop.flink.model.impl.GraphCollection;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.PairElementWithNewId;
 import org.gradoop.flink.model.impl.functions.tuple.Value0Of4;
@@ -49,6 +50,9 @@ import org.gradoop.flink.model.impl.operators.subgraph.functions.JoinTuplesWithN
 import org.gradoop.flink.model.impl.operators.subgraph.functions.JoinWithSourceGraphIdSet;
 import org.gradoop.flink.model.impl.operators.subgraph.functions.MergeEdgeGraphs;
 import org.gradoop.flink.model.impl.operators.subgraph.functions.MergeTupleGraphs;
+
+
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Takes a collection of logical graphs and a user defined aggregate function as
@@ -106,8 +110,7 @@ public class ApplySubgraph implements ApplicableUnaryGraphToGraphOperator {
    * @param collection collection of supergraphs
    * @return collection of vertex-induced subgraphs
    */
-  private GraphCollection vertexInducedSubgraph(
-    GraphCollection collection) {
+  private GraphCollection vertexInducedSubgraph(GraphCollection collection) {
     //--------------------------------------------------------------------------
     // compute a dictionary that maps the old graph ids to new ones
     //--------------------------------------------------------------------------
@@ -121,7 +124,7 @@ public class ApplySubgraph implements ApplicableUnaryGraphToGraphOperator {
     // compute new graphs
     //--------------------------------------------------------------------------
 
-    GraphHeadFactory graphFactory = collection.getConfig()
+    GraphHeadFactory graphFactory = (GraphHeadFactory) collection.getConfig()
       .getGraphHeadFactory();
 
     DataSet<GraphHead> newGraphHeads = graphIdDictionary
@@ -198,8 +201,9 @@ public class ApplySubgraph implements ApplicableUnaryGraphToGraphOperator {
       .equalTo(new Id<Edge>())
       .with(new AddGraphsToElements<Edge>());
 
-    return GraphCollection.fromDataSets(newGraphHeads, newVertices, newEdges,
-      collection.getConfig());
+    return FlinkGraphCollection
+      .fromDataSets(newGraphHeads, newVertices, newEdges,
+        (GradoopFlinkConfig) collection.getConfig());
   }
 
   /**
@@ -210,8 +214,7 @@ public class ApplySubgraph implements ApplicableUnaryGraphToGraphOperator {
    * @param collection collection of supergraphs
    * @return collection of edge-induced subgraphs
    */
-  private GraphCollection edgeInducedSubgraph(
-    GraphCollection collection) {
+  private GraphCollection edgeInducedSubgraph(GraphCollection collection) {
     //--------------------------------------------------------------------------
     // compute a dictionary that maps the old graph ids to new ones
     //--------------------------------------------------------------------------
@@ -225,7 +228,7 @@ public class ApplySubgraph implements ApplicableUnaryGraphToGraphOperator {
     // compute new graphs
     //--------------------------------------------------------------------------
 
-    GraphHeadFactory graphFactory = collection.getConfig()
+    GraphHeadFactory graphFactory = (GraphHeadFactory) collection.getConfig()
       .getGraphHeadFactory();
 
     DataSet<GraphHead> newGraphHeads = graphIdDictionary
@@ -269,8 +272,8 @@ public class ApplySubgraph implements ApplicableUnaryGraphToGraphOperator {
       .equalTo(new Id<Vertex>())
       .with(new AddGraphsToElementsCoGroup<Vertex>());
 
-    return GraphCollection.fromDataSets(newGraphHeads, newVertices, newEdges,
-      collection.getConfig());
+    return FlinkGraphCollection.fromDataSets(newGraphHeads, newVertices,
+      newEdges, (GradoopFlinkConfig) collection.getConfig());
   }
 
   /**
@@ -284,8 +287,7 @@ public class ApplySubgraph implements ApplicableUnaryGraphToGraphOperator {
    * @param collection collection of supergraphs
    * @return collection of subgraphs
    */
-  private GraphCollection subgraph(
-    GraphCollection collection) {
+  private GraphCollection subgraph(GraphCollection collection) {
 
     //--------------------------------------------------------------------------
     // compute a dictionary that maps the old graph ids to new ones
@@ -300,7 +302,8 @@ public class ApplySubgraph implements ApplicableUnaryGraphToGraphOperator {
     // compute new graphs
     //--------------------------------------------------------------------------
 
-    GraphHeadFactory graphFactory = collection.getConfig()
+    GraphHeadFactory graphFactory =
+      ((GradoopFlinkConfig) collection.getConfig())
       .getGraphHeadFactory();
 
     DataSet<GraphHead> newGraphHeads = graphIdDictionary
@@ -347,8 +350,8 @@ public class ApplySubgraph implements ApplicableUnaryGraphToGraphOperator {
       .equalTo(new Id<Edge>())
       .with(new AddGraphsToElements<Edge>());
 
-    return GraphCollection.fromDataSets(newGraphHeads, newVertices, newEdges,
-      collection.getConfig());
+    return FlinkGraphCollection.fromDataSets(newGraphHeads, newVertices,
+      newEdges, (GradoopFlinkConfig) collection.getConfig());
   }
 
   @Override

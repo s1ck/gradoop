@@ -29,7 +29,7 @@ public class GradoopFlinkTestUtils {
     return dataSet.collect().get(0);
   }
 
-  public static void printLogicalGraph(LogicalGraph graph)
+  public static void printLogicalGraph(FlinkLogicalGraph graph)
     throws Exception {
     Collection<GraphHead> graphHeadCollection = Lists.newArrayList();
     Collection<Vertex> vertexCollection = Lists.newArrayList();
@@ -60,7 +60,7 @@ public class GradoopFlinkTestUtils {
     }
   }
 
-  public static void printGraphCollection(GraphCollection collection)
+  public static void printGraphCollection(FlinkGraphCollection collection)
     throws Exception {
 
     Collection<GraphHead> graphHeadCollection = Lists.newArrayList();
@@ -92,14 +92,14 @@ public class GradoopFlinkTestUtils {
     }
   }
 
-  public static void printDirectedCanonicalAdjacencyMatrix(LogicalGraph graph)
+  public static void printDirectedCanonicalAdjacencyMatrix(FlinkLogicalGraph graph)
     throws Exception {
 
-    printDirectedCanonicalAdjacencyMatrix(GraphCollection.fromGraph(graph));
+    printDirectedCanonicalAdjacencyMatrix(FlinkGraphCollection.fromGraph(graph));
   }
 
   public static void printDirectedCanonicalAdjacencyMatrix(
-    GraphCollection collection) throws Exception {
+    FlinkGraphCollection collection) throws Exception {
 
     new CanonicalAdjacencyMatrixBuilder(
       new GraphHeadToDataString(),
@@ -107,14 +107,14 @@ public class GradoopFlinkTestUtils {
       new EdgeToDataString(), true).execute(collection).print();
   }
 
-  public static void printUndirectedCanonicalAdjacencyMatrix(LogicalGraph graph)
+  public static void printUndirectedCanonicalAdjacencyMatrix(FlinkLogicalGraph graph)
     throws Exception {
 
-    printUndirectedCanonicalAdjacencyMatrix(GraphCollection.fromGraph(graph));
+    printUndirectedCanonicalAdjacencyMatrix(FlinkGraphCollection.fromGraph(graph));
   }
 
   public static void printUndirectedCanonicalAdjacencyMatrix(
-    GraphCollection collection) throws Exception {
+    FlinkGraphCollection collection) throws Exception {
 
     new CanonicalAdjacencyMatrixBuilder(
       new GraphHeadToDataString(),

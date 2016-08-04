@@ -1,11 +1,11 @@
 package org.gradoop.flink.model.impl.operators.split;
 
+import org.gradoop.common.model.api.functions.UnaryFunction;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.properties.PropertyValue;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.api.functions.UnaryFunction;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 
@@ -35,7 +35,7 @@ public class SplitTest extends GradoopFlinkTestBase {
           "]"
       );
 
-    LogicalGraph input = loader.getLogicalGraphByVariable("input");
+    FlinkLogicalGraph input = loader.getLogicalGraphByVariable("input");
 
     GraphCollection result =
       input.callForCollection(new Split(new SelectKeyValues()));
@@ -72,7 +72,7 @@ public class SplitTest extends GradoopFlinkTestBase {
         "]"
       );
 
-    LogicalGraph input = loader.getLogicalGraphByVariable("input");
+    FlinkLogicalGraph input = loader.getLogicalGraphByVariable("input");
 
     GraphCollection result = input
       .callForCollection(new Split(new SelectKeyValues()));
@@ -107,7 +107,7 @@ public class SplitTest extends GradoopFlinkTestBase {
         "]"
       );
 
-    LogicalGraph input = loader.getLogicalGraphByVariable("input");
+    FlinkLogicalGraph input = loader.getLogicalGraphByVariable("input");
 
     GraphCollection result = input
       .callForCollection(new Split(new SelectKeyValues()));
@@ -138,7 +138,7 @@ public class SplitTest extends GradoopFlinkTestBase {
           "]"
       );
 
-    LogicalGraph input = loader.getLogicalGraphByVariable("g1");
+    FlinkLogicalGraph input = loader.getLogicalGraphByVariable("g1");
 
     GraphCollection result = input.splitBy("id");
 

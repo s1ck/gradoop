@@ -1,12 +1,13 @@
 package org.gradoop.flink.model.impl;
 
 import com.google.common.collect.Lists;
-import org.gradoop.common.model.impl.pojo.GraphHead;
-import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.common.model.api.entities.EPGMGraphHead;
-import org.gradoop.flink.model.impl.functions.bool.Equals;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.id.GradoopIdSet;
+import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.flink.model.GradoopFlinkTestBase;
+import org.gradoop.flink.model.impl.functions.bool.Equals;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 

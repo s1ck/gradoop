@@ -32,7 +32,7 @@ import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.GraphHeadFactory;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.pojo.VertexFactory;
-import org.gradoop.flink.model.impl.tuples.GraphTransaction;
+import org.gradoop.common.model.impl.pojo.GraphTransaction;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 import java.util.List;
@@ -206,9 +206,6 @@ public class PredictableTransaction implements
 
   @Override
   public TypeInformation<GraphTransaction> getProducedType() {
-    return new TupleTypeInfo<>(
-      TypeExtractor.getForClass(graphHeadFactory.getType()),
-      TypeExtractor.getForClass(Set.class),
-      TypeExtractor.getForClass(Set.class));
+    return TypeExtractor.getForClass(GraphTransaction.class);
   }
 }

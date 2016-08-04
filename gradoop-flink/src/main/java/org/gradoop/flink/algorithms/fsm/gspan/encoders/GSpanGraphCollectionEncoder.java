@@ -18,6 +18,11 @@
 package org.gradoop.flink.algorithms.fsm.gspan.encoders;
 
 import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.flink.algorithms.fsm.config.BroadcastNames;
 import org.gradoop.flink.algorithms.fsm.config.FSMConfig;
 import org.gradoop.flink.algorithms.fsm.gspan.api.GSpanEncoder;
 import org.gradoop.flink.algorithms.fsm.gspan.encoders.functions.AppendSourceLabel;
@@ -33,13 +38,8 @@ import org.gradoop.flink.algorithms.fsm.gspan.encoders.tuples.VertexIdLabel;
 import org.gradoop.flink.algorithms.fsm.gspan.functions.CombineGSpanGraph;
 import org.gradoop.flink.algorithms.fsm.gspan.functions.Frequent;
 import org.gradoop.flink.algorithms.fsm.gspan.pojos.GSpanGraph;
-import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.algorithms.fsm.config.BroadcastNames;
 import org.gradoop.flink.model.impl.functions.tuple.Value1Of2;
 import org.gradoop.flink.model.impl.functions.utils.AddCount;
-import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.flink.model.impl.operators.count.Count;
 
 import java.util.List;
@@ -111,8 +111,8 @@ public class GSpanGraphCollectionEncoder implements
    * @param collection input graph collection
    * @param fsmConfig FSM configuration
    */
-  private void setMinFrequency(
-    GraphCollection collection, FSMConfig fsmConfig) {
+  private void setMinFrequency(GraphCollection collection,
+    FSMConfig fsmConfig) {
 
     this.minFrequency = Count
       .count(collection.getGraphHeads())

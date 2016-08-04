@@ -22,7 +22,7 @@ import org.apache.flink.api.java.functions.FunctionAnnotation;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.api.functions.UnaryFunction;
+import org.gradoop.common.model.api.functions.UnaryFunction;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.properties.PropertyValue;
 

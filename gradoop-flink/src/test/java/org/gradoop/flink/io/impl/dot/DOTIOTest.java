@@ -1,8 +1,8 @@
 package org.gradoop.flink.io.impl.dot;
 
-import org.gradoop.flink.io.api.DataSink;
+import org.gradoop.common.io.api.DataSink;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Rule;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class DOTIOTest extends GradoopFlinkTestBase {
     FlinkAsciiGraphLoader loader = getLoaderFromFile(gdlFile);
 
     // load input graph
-    LogicalGraph inputGraph = loader.getLogicalGraphByVariable("singleGraph");
+    FlinkLogicalGraph inputGraph = loader.getLogicalGraphByVariable("singleGraph");
 
     // create temp directory
     String tmpDir = temporaryFolder.getRoot().toString();

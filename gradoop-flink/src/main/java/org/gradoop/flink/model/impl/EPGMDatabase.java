@@ -20,10 +20,12 @@ package org.gradoop.flink.model.impl;
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.io.api.DataSink;
+import org.gradoop.common.io.api.DataSink;
 import org.gradoop.flink.model.impl.functions.graphcontainment
   .AddToGraphBroadcast;
 import org.gradoop.flink.util.GradoopFlinkConfig;
@@ -50,7 +52,7 @@ public class EPGMDatabase {
   /**
    * Database graph representing the vertex and edge space.
    */
-  private GraphCollection database;
+  private FlinkGraphCollection database;
 
   /**
    * Graph head representing the database graph.
@@ -70,7 +72,7 @@ public class EPGMDatabase {
     DataSet<Edge> edges,
     GradoopFlinkConfig config) {
     this.config = config;
-    this.database = GraphCollection.fromDataSets(graphHeads, vertices,
+    this.database = FlinkGraphCollection.fromDataSets(graphHeads, vertices,
       edges, config);
     graphHead = config.getExecutionEnvironment().fromElements(
       config.getGraphHeadFactory().createGraphHead(GConstants.DB_GRAPH_LABEL));
@@ -125,7 +127,7 @@ public class EPGMDatabase {
    * @return logical graph of vertex and edge space
    */
   @Deprecated
-  public LogicalGraph getDatabaseGraph() {
+  public FlinkLogicalGraph getDatabaseGraph() {
     return getDatabaseGraph(false);
   }
 
@@ -140,17 +142,17 @@ public class EPGMDatabase {
    * @return logical graph of vertex and edge space
    */
   @Deprecated
-  public LogicalGraph getDatabaseGraph(boolean withGraphContainment) {
+  public FlinkLogicalGraph getDatabaseGraph(boolean withGraphContainment) {
     if (withGraphContainment) {
       DataSet<GradoopId> graphId = graphHead.map(new Id<GraphHead>());
-      return LogicalGraph.fromDataSets(graphHead,
+      return FlinkLogicalGraph.fromDataSets(graphHead,
         database.getVertices().map(new AddToGraphBroadcast<Vertex>())
           .withBroadcastSet(graphId, AddToGraphBroadcast.GRAPH_ID),
         database.getEdges().map(new AddToGraphBroadcast<Edge>())
           .withBroadcastSet(graphId, AddToGraphBroadcast.GRAPH_ID),
         config);
     } else {
-      return LogicalGraph.fromDataSets(graphHead,
+      return FlinkLogicalGraph.fromDataSets(graphHead,
         database.getVertices(), database.getEdges(), config);
     }
   }
@@ -190,7 +192,8 @@ public class EPGMDatabase {
         }
       });
 
-    return GraphCollection.fromDataSets(database.getGraphHeads(), newVertices,
+    return FlinkGraphCollection
+      .fromDataSets(database.getGraphHeads(), newVertices,
       newEdges, config);
   }
 

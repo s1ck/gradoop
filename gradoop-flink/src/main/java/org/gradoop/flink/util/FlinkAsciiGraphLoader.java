@@ -21,9 +21,9 @@ import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.util.AsciiGraphLoader;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.EPGMDatabase;
-import org.gradoop.flink.model.impl.GraphCollection;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +31,7 @@ import java.util.Collection;
 
 /**
  * Used the {@link AsciiGraphLoader} to generate instances of
- * {@link LogicalGraph} and {@link GraphCollection} from GDL.
+ * {@link FlinkLogicalGraph} and {@link FlinkGraphCollection} from GDL.
  *
  * @see <a href="https://github.com/s1ck/gdl">GDL on GitHub</a>
  */
@@ -116,28 +116,28 @@ public class FlinkAsciiGraphLoader {
   }
 
   /**
-   * Builds a {@link LogicalGraph} from the graph referenced by the given
+   * Builds a {@link FlinkLogicalGraph} from the graph referenced by the given
    * graph variable.
    *
    * @param variable graph variable used in GDL script
-   * @return LogicalGraph
+   * @return FlinkLogicalGraph
    */
-  public LogicalGraph getLogicalGraphByVariable(String variable) {
+  public FlinkLogicalGraph getLogicalGraphByVariable(String variable) {
     GraphHead graphHead = loader.getGraphHeadByVariable(variable);
     Collection<Vertex> vertices = loader.getVerticesByGraphVariables(variable);
     Collection<Edge> edges = loader.getEdgesByGraphVariables(variable);
 
-    return LogicalGraph.fromCollections(graphHead, vertices, edges, config);
+    return FlinkLogicalGraph.fromCollections(graphHead, vertices, edges, config);
   }
 
   /**
-   * Builds a {@link GraphCollection} from the graph referenced by the given
+   * Builds a {@link FlinkGraphCollection} from the graph referenced by the given
    * graph variables.
    *
    * @param variables graph variables used in GDL script
-   * @return GraphCollection
+   * @return FlinkGraphCollection
    */
-  public GraphCollection getGraphCollectionByVariables(String... variables) {
+  public FlinkGraphCollection getGraphCollectionByVariables(String... variables) {
     Collection<GraphHead> graphHeads =
       loader.getGraphHeadsByVariables(variables);
     Collection<Vertex> vertices =
@@ -145,7 +145,8 @@ public class FlinkAsciiGraphLoader {
     Collection<Edge> edges =
       loader.getEdgesByGraphVariables(variables);
 
-    return GraphCollection.fromCollections(graphHeads, vertices, edges, config);
+    return FlinkGraphCollection
+      .fromCollections(graphHeads, vertices, edges, config);
   }
 
   /**

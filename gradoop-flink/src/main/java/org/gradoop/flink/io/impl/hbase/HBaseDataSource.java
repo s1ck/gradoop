@@ -22,19 +22,20 @@ import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.typeutils.TupleTypeInfo;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.LogicalGraph;
 import org.gradoop.flink.model.impl.functions.tuple.ValueOf1;
 import org.gradoop.flink.model.impl.operators.combination.ReduceCombination;
 import org.gradoop.flink.util.GradoopFlinkConfig;
-import org.gradoop.flink.io.api.DataSource;
+import org.gradoop.common.io.api.DataSource;
 import org.gradoop.flink.io.impl.hbase.inputformats.EdgeTableInputFormat;
 import org.gradoop.flink.io.impl.hbase.inputformats.GraphHeadTableInputFormat;
 import org.gradoop.flink.io.impl.hbase.inputformats.VertexTableInputFormat;
 import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.common.storage.impl.hbase.HBaseEPGMStore;
 
 /**
@@ -49,7 +50,7 @@ public class HBaseDataSource extends HBaseBase<GraphHead, Vertex, Edge>
    * @param epgmStore HBase store
    * @param config    Gradoop Flink configuration
    */
-  public HBaseDataSource(HBaseEPGMStore epgmStore,
+  public HBaseDataSource(HBaseEPGMStore<GraphHead, Vertex, Edge> epgmStore,
     GradoopFlinkConfig config) {
     super(epgmStore, config);
   }
@@ -89,7 +90,7 @@ public class HBaseDataSource extends HBaseBase<GraphHead, Vertex, Edge>
       new EdgeTableInputFormat<>(config.getEdgeHandler(),
         store.getEdgeTableName()), edgeTypeInfo);
 
-    return GraphCollection.fromDataSets(
+    return FlinkGraphCollection.fromDataSets(
       graphHeads.map(new ValueOf1<GraphHead>()),
       vertices.map(new ValueOf1<Vertex>()),
       edges.map(new ValueOf1<Edge>()),

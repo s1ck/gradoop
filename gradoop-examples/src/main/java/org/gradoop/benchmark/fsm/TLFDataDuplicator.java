@@ -19,14 +19,15 @@ package org.gradoop.benchmark.fsm;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.flink.api.common.ProgramDescription;
+import org.gradoop.common.model.api.operators.GraphTransactions;
 import org.gradoop.examples.AbstractRunner;
-import org.gradoop.flink.io.api.DataSink;
-import org.gradoop.flink.io.api.DataSource;
+import org.gradoop.common.io.api.DataSink;
+import org.gradoop.common.io.api.DataSource;
 import org.gradoop.flink.io.impl.tlf.TLFDataSink;
 import org.gradoop.flink.io.impl.tlf.TLFDataSource;
-import org.gradoop.flink.model.impl.GraphTransactions;
+import org.gradoop.flink.model.impl.FlinkGraphTransactions;
 import org.gradoop.flink.model.impl.functions.utils.Duplicate;
-import org.gradoop.flink.model.impl.tuples.GraphTransaction;
+import org.gradoop.common.model.impl.pojo.GraphTransaction;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
@@ -80,11 +81,11 @@ public class TLFDataDuplicator extends AbstractRunner implements
 
     GraphTransactions input = dataSource.getGraphTransactions();
 
-    GraphTransactions output = new GraphTransactions(input
+    GraphTransactions  output = new FlinkGraphTransactions(input
       .getTransactions()
       .flatMap(new Duplicate<GraphTransaction>(multiplicand))
-      .returns(GraphTransaction.getTypeInformation(config)),
-      config);
+//      .returns(GraphTransaction.getTypeInformation(config))
+      , config);
 
     dataSink.write(output);
 

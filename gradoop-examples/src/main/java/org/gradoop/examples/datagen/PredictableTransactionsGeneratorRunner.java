@@ -21,9 +21,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.flink.api.common.ProgramDescription;
 import org.gradoop.flink.datagen.transactions.predictable.PredictableTransactionsGenerator;
 import org.gradoop.examples.AbstractRunner;
-import org.gradoop.flink.io.api.DataSink;
+import org.gradoop.common.io.api.DataSink;
 import org.gradoop.flink.io.impl.tlf.TLFDataSink;
-import org.gradoop.flink.model.impl.GraphTransactions;
+import org.gradoop.flink.model.impl.FlinkGraphTransactions;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
@@ -86,7 +86,7 @@ public class PredictableTransactionsGeneratorRunner extends AbstractRunner
       GradoopFlinkConfig.createConfig(getExecutionEnvironment()));
 
     // execute generator
-    GraphTransactions generatedGraph = dataGen.execute();
+    FlinkGraphTransactions generatedGraph = dataGen.execute();
 
     // build result name
     String fileName = "predictable_" + graphCount + "_" + graphSize;

@@ -19,18 +19,17 @@ package org.gradoop.flink.model.impl.operators.aggregation.functions.count;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.gradoop.flink.model.api.functions.AggregateFunction;
-import org.gradoop.flink.model.api.functions.ApplyAggregateFunction;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.functions.AggregateFunction;
+import org.gradoop.common.model.api.functions.ApplyAggregateFunction;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.properties.PropertyValue;
 import org.gradoop.flink.model.impl.functions.epgm.ToPropertyValue;
 import org.gradoop.flink.model.impl.functions.graphcontainment.ExpandGraphsToIds;
-import org.gradoop.flink.model.impl.operators.aggregation.functions
-  .GroupCountToPropertyValue;
+import org.gradoop.flink.model.impl.operators.aggregation.functions.GroupCountToPropertyValue;
 import org.gradoop.flink.model.impl.operators.count.Count;
-import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.common.model.impl.properties.PropertyValue;
 
 /**
  * Aggregate function returning the edge count of a graph / collection.

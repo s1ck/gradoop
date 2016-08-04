@@ -17,14 +17,15 @@
 
 package org.gradoop.flink.io.impl.json;
 
-import org.gradoop.flink.io.api.DataSink;
+import org.gradoop.common.io.api.DataSink;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.flink.io.impl.json.functions.EdgeToJSON;
 import org.gradoop.flink.io.impl.json.functions.VertexToJSON;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.LogicalGraph;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 import org.gradoop.flink.io.impl.json.functions.GraphHeadToJSON;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 
 /**
  * Write an EPGM representation into three separate JSON files. The format
@@ -48,7 +49,7 @@ public class JSONDataSink extends JSONBase implements DataSink {
 
   @Override
   public void write(LogicalGraph logicalGraph) {
-    write(GraphCollection.fromGraph(logicalGraph));
+    write(FlinkGraphCollection.fromGraph(logicalGraph));
   }
 
   @Override
@@ -63,6 +64,6 @@ public class JSONDataSink extends JSONBase implements DataSink {
 
   @Override
   public void write(GraphTransactions graphTransactions) {
-    write(GraphCollection.fromTransactions(graphTransactions));
+    write(FlinkGraphCollection.fromTransactions(graphTransactions));
   }
 }

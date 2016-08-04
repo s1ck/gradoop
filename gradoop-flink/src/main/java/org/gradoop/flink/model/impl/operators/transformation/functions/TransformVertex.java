@@ -21,7 +21,7 @@ import org.apache.flink.api.java.functions.FunctionAnnotation;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.pojo.VertexFactory;
 import org.gradoop.common.util.GConstants;
-import org.gradoop.flink.model.api.functions.TransformationFunction;
+import org.gradoop.common.model.api.functions.TransformationFunction;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 

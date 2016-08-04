@@ -18,10 +18,10 @@
 package org.gradoop.flink.model.impl.operators.combination;
 
 import org.apache.flink.api.java.io.LocalCollectionOutputFormat;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphElement;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.LogicalGraph;
 import org.gradoop.flink.model.impl.operators.base.ReducibleBinaryOperatorsTestBase;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;

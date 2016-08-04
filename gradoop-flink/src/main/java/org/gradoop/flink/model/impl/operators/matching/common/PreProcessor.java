@@ -18,7 +18,8 @@
 package org.gradoop.flink.model.impl.operators.matching.common;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.operators.matching.common.tuples
   .IdWithCandidates;
 import org.gradoop.flink.model.impl.operators.matching.common.functions.BuildIdWithCandidates;
@@ -78,7 +79,7 @@ public class PreProcessor {
    * @return dataset with matching vertex-edge pairs
    */
   public static
-  DataSet<TripleWithSourceEdgeCandidates> filterPairs(LogicalGraph g,
+  DataSet<TripleWithSourceEdgeCandidates> filterPairs(FlinkLogicalGraph g,
     final String query) {
     return filterPairs(g, query, filterVertices(g, query));
   }

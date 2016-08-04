@@ -26,7 +26,7 @@ import org.gradoop.flink.algorithms.fsm.gspan.encoders.tuples.EdgeTripleWithStri
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.tuples.GraphTransaction;
+import org.gradoop.common.model.impl.pojo.GraphTransaction;
 
 import java.util.Collection;
 import java.util.Map;

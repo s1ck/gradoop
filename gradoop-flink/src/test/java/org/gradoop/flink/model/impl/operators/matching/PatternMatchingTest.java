@@ -1,7 +1,7 @@
 package org.gradoop.flink.model.impl.operators.matching;
 
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,7 +39,7 @@ public abstract class PatternMatchingTest extends GradoopFlinkTestBase {
     FlinkAsciiGraphLoader loader = getLoaderFromString(dataGraph);
 
     // initialize with data graph
-    LogicalGraph db = loader
+    FlinkLogicalGraph db = loader
       .getLogicalGraphByVariable(TestData.DATA_GRAPH_VARIABLE);
 
     // append the expected result
@@ -56,7 +56,7 @@ public abstract class PatternMatchingTest extends GradoopFlinkTestBase {
     FlinkAsciiGraphLoader loader = getLoaderFromString(dataGraph);
 
     // initialize with data graph
-    LogicalGraph db = loader
+    FlinkLogicalGraph db = loader
       .getLogicalGraphByVariable(TestData.DATA_GRAPH_VARIABLE);
 
     // append the expected result

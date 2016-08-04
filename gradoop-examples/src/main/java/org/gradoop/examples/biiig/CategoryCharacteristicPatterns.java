@@ -26,12 +26,13 @@ import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.examples.utils.ExampleOutput;
-import org.gradoop.flink.model.api.functions.ApplyAggregateFunction;
-import org.gradoop.flink.model.api.functions.TransformationFunction;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.functions.ApplyAggregateFunction;
+import org.gradoop.common.model.api.functions.TransformationFunction;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.algorithms.btgs.BusinessTransactionGraphs;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.flink.model.impl.operators.aggregation.ApplyAggregation;
@@ -64,7 +65,7 @@ public class CategoryCharacteristicPatterns implements ProgramDescription {
 
     ExampleOutput out = new ExampleOutput();
 
-    LogicalGraph iig = getIntegratedInstanceGraph();
+    FlinkLogicalGraph iig = getIntegratedInstanceGraph();
 
     out.add("Integrated Instance Graph", iig);
 
@@ -97,7 +98,7 @@ public class CategoryCharacteristicPatterns implements ProgramDescription {
    * @return integrated instance graph
    * @throws IOException
    */
-  public static LogicalGraph getIntegratedInstanceGraph() throws IOException {
+  public static FlinkLogicalGraph getIntegratedInstanceGraph() throws IOException {
 
     ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
 

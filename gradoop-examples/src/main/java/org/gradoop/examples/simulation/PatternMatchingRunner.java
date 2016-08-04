@@ -21,9 +21,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.flink.api.common.ProgramDescription;
 import org.apache.flink.api.common.operators.base.JoinOperatorBase.JoinHint;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.examples.AbstractRunner;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
 import org.gradoop.flink.model.impl.operators.matching.PatternMatching;
 import org.gradoop.flink.model.impl.operators.matching.common.query.DFSTraverser;
 import org.gradoop.flink.model.impl.operators.matching.isomorphism.explorative.ExplorativeSubgraphIsomorphism;
@@ -121,8 +121,8 @@ public class PatternMatchingRunner extends AbstractRunner implements
 
     LogicalGraph epgmDatabase = readLogicalGraph(inputDir);
 
-    GraphCollection result = execute(
-      epgmDatabase, query, attachData, algorithm);
+    GraphCollection result = execute(epgmDatabase, query, attachData,
+      algorithm);
 
     writeGraphCollection(result, outputDir);
 
@@ -161,8 +161,7 @@ public class PatternMatchingRunner extends AbstractRunner implements
    * @param algorithm     algorithm to use for pattern matching
    * @return result match graph
    */
-  private static GraphCollection execute(
-    LogicalGraph databaseGraph,
+  private static GraphCollection execute(LogicalGraph databaseGraph,
     String query, boolean attachData, String algorithm) {
 
     PatternMatching op;

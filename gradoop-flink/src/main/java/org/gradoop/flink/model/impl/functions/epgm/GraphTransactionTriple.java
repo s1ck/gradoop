@@ -22,7 +22,7 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.tuples.GraphTransaction;
+import org.gradoop.common.model.impl.pojo.GraphTransaction;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.id.GradoopId;
 
@@ -40,7 +40,8 @@ public class GraphTransactionTriple implements
   public Tuple3<GraphHead, Set<Vertex>, Set<Edge>> map(
     GraphTransaction transaction) throws Exception {
 
-    return new Tuple3<>(transaction.f0, transaction.f1, transaction.f2);
+    return new Tuple3<>(transaction.getGraphHead(), transaction.getVertices(),
+      transaction.getEdges());
   }
 
   @Override

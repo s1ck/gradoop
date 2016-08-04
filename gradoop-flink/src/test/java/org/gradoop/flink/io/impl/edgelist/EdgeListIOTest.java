@@ -17,9 +17,10 @@
 
 package org.gradoop.flink.io.impl.edgelist;
 
-import org.gradoop.flink.io.api.DataSource;
+import org.gradoop.common.io.api.DataSource;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 
@@ -41,7 +42,7 @@ public class EdgeListIOTest extends GradoopFlinkTestBase {
     // load from gdl
     FlinkAsciiGraphLoader loader = getLoaderFromFile(gdlFile);
 
-    LogicalGraph resultGraph = loader.getLogicalGraphByVariable("result");
+    FlinkLogicalGraph resultGraph = loader.getLogicalGraphByVariable("result");
 
     // test element data
     collectAndAssertTrue(resultGraph.equalsByElementData(tsvGraph));

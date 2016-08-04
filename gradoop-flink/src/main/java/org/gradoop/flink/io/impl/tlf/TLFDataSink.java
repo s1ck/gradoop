@@ -18,19 +18,20 @@
 package org.gradoop.flink.io.impl.tlf;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.flink.io.api.DataSink;
+import org.gradoop.common.io.api.DataSink;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.common.model.impl.pojo.GraphTransaction;
 import org.gradoop.flink.io.impl.tlf.constants.BroadcastNames;
 import org.gradoop.flink.io.impl.tlf.functions.EdgeLabelList;
 import org.gradoop.flink.io.impl.tlf.functions.ElementLabelEncoder;
 import org.gradoop.flink.io.impl.tlf.functions.TLFDictionaryFileFormat;
+import org.gradoop.flink.io.impl.tlf.functions.TLFDictionaryMapGroupReducer;
 import org.gradoop.flink.io.impl.tlf.functions.TLFFileFormat;
 import org.gradoop.flink.io.impl.tlf.functions.VertexLabelList;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.LogicalGraph;
-import org.gradoop.flink.model.impl.tuples.GraphTransaction;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.util.GradoopFlinkConfig;
-import org.gradoop.flink.io.impl.tlf.functions.TLFDictionaryMapGroupReducer;
-import org.gradoop.flink.model.impl.GraphCollection;
 
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public class TLFDataSink extends TLFBase implements DataSink {
 
   @Override
   public void write(LogicalGraph logicalGraph) {
-    write(GraphCollection.fromGraph(logicalGraph).toTransactions());
+    write(FlinkGraphCollection.fromGraph(logicalGraph).toTransactions());
   }
 
   @Override

@@ -1,11 +1,10 @@
 package org.gradoop.flink.algorithms.fsm;
 
-import org.gradoop.flink.algorithms.fsm.TransactionalFSM;
-import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.api.operators.UnaryCollectionToCollectionOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.UnaryCollectionToCollectionOperator;
 import org.gradoop.flink.algorithms.fsm.config.FSMConfig;
 import org.gradoop.flink.algorithms.fsm.config.TransactionalFSMAlgorithm;
+import org.gradoop.flink.model.GradoopFlinkTestBase;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 
@@ -180,14 +179,13 @@ public class TransactionalFSMTest extends GradoopFlinkTestBase {
     GraphCollection expectation =
       loader.getGraphCollectionByVariables(expectedResultVariables);
 
-    GraphCollection result =
-      gSpan.execute(searchSpace);
+    GraphCollection result = gSpan.execute(searchSpace);
 
     collectAndAssertTrue(expectation.equalsByGraphElementData(result));
   }
 
-  private Collection<UnaryCollectionToCollectionOperator
-    > getDirectedMultigraphMiners() {
+  private Collection<UnaryCollectionToCollectionOperator>
+  getDirectedMultigraphMiners() {
 
     Collection<UnaryCollectionToCollectionOperator
       > miners = new ArrayList<>();

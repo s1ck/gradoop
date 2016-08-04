@@ -17,20 +17,25 @@
 
 package org.gradoop.flink.model.impl.operators.transformation;
 
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.api.functions.TransformationFunction;
-import org.gradoop.flink.model.api.operators.ApplicableUnaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.common.model.api.functions.TransformationFunction;
+import org.gradoop.common.model.api.operators.ApplicableUnaryGraphToGraphOperator;
+
+
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Applies the transformation operator on on all logical graphs in a graph
  * collection.
  */
-public class ApplyTransformation extends Transformation
-  implements ApplicableUnaryGraphToGraphOperator {
+public class ApplyTransformation extends Transformation implements
+  ApplicableUnaryGraphToGraphOperator {
 
   /**
    * Creates a new operator instance.
@@ -48,13 +53,13 @@ public class ApplyTransformation extends Transformation
   @Override
   public GraphCollection execute(GraphCollection collection) {
     // the resulting logical graph holds multiple graph heads
-    LogicalGraph modifiedGraph = executeInternal(
+    FlinkLogicalGraph modifiedGraph = executeInternal(
       collection.getGraphHeads(),
       collection.getVertices(),
       collection.getEdges(),
-      collection.getConfig());
+      (GradoopFlinkConfig) collection.getConfig());
 
-    return GraphCollection.fromDataSets(modifiedGraph.getGraphHead(),
+    return FlinkGraphCollection.fromDataSets(modifiedGraph.getGraphHead(),
       modifiedGraph.getVertices(),
       modifiedGraph.getEdges(),
       modifiedGraph.getConfig());

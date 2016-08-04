@@ -17,12 +17,13 @@
 package org.gradoop.flink.model.impl.operators.equality;
 
 import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.LogicalGraph;
-import org.gradoop.flink.model.api.operators.BinaryGraphToValueOperator;
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.common.model.api.operators.BinaryGraphToValueOperator;
 import org.gradoop.flink.model.impl.operators.tostring.api.EdgeToString;
 import org.gradoop.flink.model.impl.operators.tostring.api.GraphHeadToString;
 import org.gradoop.flink.model.impl.operators.tostring.api.VertexToString;
@@ -60,11 +61,11 @@ public class GraphEquality implements BinaryGraphToValueOperator<Boolean> {
   }
 
   @Override
-  public DataSet<Boolean> execute(
-    LogicalGraph firstGraph, LogicalGraph secondGraph) {
+  public DataSet<Boolean> execute(LogicalGraph firstGraph,
+    LogicalGraph secondGraph) {
     return collectionEquality.execute(
-      GraphCollection.fromGraph(firstGraph),
-      GraphCollection.fromGraph(secondGraph)
+      FlinkGraphCollection.fromGraph(firstGraph),
+      FlinkGraphCollection.fromGraph(secondGraph)
     );
   }
 

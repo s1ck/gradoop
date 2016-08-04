@@ -1,6 +1,7 @@
 package org.gradoop.flink.model.impl.operators.intersection;
 
-import org.gradoop.flink.model.impl.GraphCollection;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.operators.base.BinaryCollectionOperatorsTestBase;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
@@ -32,7 +33,7 @@ public class ReduceIntersectionTest extends BinaryCollectionOperatorsTestBase {
 
     GraphCollection col23 = loader.getGraphCollectionByVariables("g2", "g3");
 
-    GraphCollection expectation = GraphCollection.createEmptyCollection(config);
+    GraphCollection expectation = FlinkGraphCollection.createEmptyCollection(config);
 
     GraphCollection result = col01.intersect(col23);
 

@@ -2,30 +2,27 @@ package org.gradoop.flink.io.impl.hbase;
 
 import com.google.common.collect.Lists;
 import org.apache.flink.api.java.io.LocalCollectionOutputFormat;
-import org.gradoop.common.model.api.entities.EPGMEdge;
-import org.gradoop.common.model.api.entities.EPGMGraphHead;
-import org.gradoop.common.model.api.entities.EPGMVertex;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.EPGMDatabase;
-import org.gradoop.flink.model.impl.GraphCollection;
 import org.gradoop.common.storage.api.PersistentEdge;
 import org.gradoop.common.storage.api.PersistentGraphHead;
 import org.gradoop.common.storage.api.PersistentVertex;
 import org.gradoop.common.storage.impl.hbase.GradoopHBaseTestBase;
 import org.gradoop.common.storage.impl.hbase.HBaseEPGMStore;
+import org.gradoop.flink.model.impl.EPGMDatabase;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
 
 import java.util.Collection;
 import java.util.List;
 
-import static org.gradoop.common.GradoopTestUtils.validateEPGMElementCollections;
-import static org.gradoop.common.GradoopTestUtils.validateEPGMGraphElementCollections;
-import static org.gradoop.common.storage.impl.hbase.GradoopHBaseTestUtils.getSocialPersistentEdges;
-import static org.gradoop.common.storage.impl.hbase.GradoopHBaseTestUtils.getSocialPersistentGraphHeads;
-import static org.gradoop.common.storage.impl.hbase.GradoopHBaseTestUtils.getSocialPersistentVertices;
+import static org.gradoop.common.GradoopTestUtils
+  .validateEPGMElementCollections;
+import static org.gradoop.common.GradoopTestUtils
+  .validateEPGMGraphElementCollections;
+import static org.gradoop.common.storage.impl.hbase.GradoopHBaseTestUtils.*;
 
 public class HBaseIOTest extends FlinkHBaseTestBase {
 

@@ -18,10 +18,10 @@
 package org.gradoop.flink.model.impl.operators.aggregation;
 
 import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.GraphCollection;
-import org.gradoop.flink.model.impl.LogicalGraph;
 import org.gradoop.flink.model.impl.operators.aggregation.functions.count.EdgeCount;
 import org.gradoop.flink.model.impl.operators.aggregation.functions.count.VertexCount;
 import org.gradoop.flink.model.impl.operators.aggregation.functions.max.MaxEdgeProperty;
@@ -39,19 +39,19 @@ import static org.junit.Assert.assertTrue;
 
 public class AggregationTest extends GradoopFlinkTestBase {
 
-  public static final String EDGE_SUM = "edge sum";
-  public static final String VERTEX_SUM = "vertex sum";
-  public static final String EDGE_PROPERTY = "ep";
-  public static final String VERTEX_PROPERTY = "vp";
+  private static final String EDGE_SUM = "edge sum";
+  private static final String VERTEX_SUM = "vertex sum";
+  private static final String EDGE_PROPERTY = "ep";
+  private static final String VERTEX_PROPERTY = "vp";
 
-  public static final String EDGE_MIN = "edge min";
-  public static final String VERTEX_MIN = "vertex min";
+  private static final String EDGE_MIN = "edge min";
+  private static final String VERTEX_MIN = "vertex min";
 
-  public static final String EDGE_MAX = "edge min";
-  public static final String VERTEX_MAX = "vertex min";
+  private static final String EDGE_MAX = "edge min";
+  private static final String VERTEX_MAX = "vertex min";
 
-  public static final String EDGE_COUNT = "edgeCount";
-  public static final String VERTEX_COUNT = "vertexCount";
+  private static final String EDGE_COUNT = "edgeCount";
+  private static final String VERTEX_COUNT = "vertexCount";
 
   @Test
   public void testSingleGraphVertexAndEdgeMin() throws Exception {

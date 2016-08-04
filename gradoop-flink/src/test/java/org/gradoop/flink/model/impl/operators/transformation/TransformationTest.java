@@ -2,13 +2,13 @@ package org.gradoop.flink.model.impl.operators.transformation;
 
 import com.google.common.collect.Lists;
 import org.apache.flink.api.java.io.LocalCollectionOutputFormat;
+import org.gradoop.common.model.api.functions.TransformationFunction;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.api.functions.TransformationFunction;
-import org.gradoop.flink.model.impl.LogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.util.FlinkAsciiGraphLoader;
 import org.junit.Test;
@@ -105,12 +105,10 @@ public class TransformationTest extends GradoopFlinkTestBase {
 
     LogicalGraph expected = loader.getLogicalGraphByVariable("g01");
 
-    LogicalGraph
-      result = original.transform(
-      new GraphHeadModifier(),
-      new VertexModifier(),
-      new EdgeModifier()
-    );
+    LogicalGraph result = original
+      .transform(
+        new GraphHeadModifier(),
+        new VertexModifier(), new EdgeModifier());
 
     collectAndAssertTrue(result.equalsByData(expected));
   }

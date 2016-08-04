@@ -18,9 +18,9 @@
 package org.gradoop.flink.datagen.transactions.predictable;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.flink.model.api.operators.GraphTransactionsGenerator;
-import org.gradoop.flink.model.impl.GraphTransactions;
-import org.gradoop.flink.model.impl.tuples.GraphTransaction;
+import org.gradoop.common.model.api.operators.GraphTransactionsGenerator;
+import org.gradoop.flink.model.impl.FlinkGraphTransactions;
+import org.gradoop.common.model.impl.pojo.GraphTransaction;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
@@ -66,17 +66,17 @@ public class PredictableTransactionsGenerator implements
   }
 
   @Override
-  public GraphTransactions execute() {
+  public FlinkGraphTransactions execute() {
 
     DataSet<Long> graphNumbers = config
       .getExecutionEnvironment()
       .generateSequence(1, graphCount);
 
     DataSet<GraphTransaction> transactions = graphNumbers
-      .map(new PredictableTransaction(graphSize, multigraph, config))
-      .returns(GraphTransaction.getTypeInformation(config));
+      .map(new PredictableTransaction(graphSize, multigraph, config));
+//      .returns(GraphTransaction.getTypeInformation(config));
 
-    return new GraphTransactions(transactions, config);
+    return new FlinkGraphTransactions(transactions, config);
   }
 
   @Override

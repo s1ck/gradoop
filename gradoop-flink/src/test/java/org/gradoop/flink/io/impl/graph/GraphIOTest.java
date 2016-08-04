@@ -6,7 +6,7 @@ import org.apache.flink.api.java.ExecutionEnvironment;
 import org.gradoop.flink.io.impl.graph.tuples.ImportEdge;
 import org.gradoop.flink.io.impl.graph.tuples.ImportVertex;
 import org.gradoop.flink.model.GradoopFlinkTestBase;
-import org.gradoop.flink.model.impl.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.common.model.impl.properties.PropertyList;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class GraphIOTest extends GradoopFlinkTestBase {
       new ImportEdge<>(0L, 0L, 1L, "a", PropertyList.createFromMap(properties)),
       new ImportEdge<>(1L, 1L, 0L, "b", PropertyList.createFromMap(properties)));
 
-    LogicalGraph expected = getLoaderFromString("expected[" +
+    FlinkLogicalGraph expected = getLoaderFromString("expected[" +
         "(a:A {foo = 42, __L = 0L});" +
         "(b:B {foo = 42, __L = 1L});" +
         "(a)-[:a {foo=42, __L = 0L}]->(b)-[:b {foo=42, __L = 1L}]->(a);" +
@@ -38,7 +38,7 @@ public class GraphIOTest extends GradoopFlinkTestBase {
     GraphDataSource<Long> dataSource = new GraphDataSource<>(
       importVertices, importEdges, "__L", getConfig());
 
-    LogicalGraph output = dataSource.getLogicalGraph();
+    FlinkLogicalGraph output = dataSource.getLogicalGraph();
 
     collectAndAssertTrue(output.equalsByElementData(expected));
   }
@@ -58,7 +58,7 @@ public class GraphIOTest extends GradoopFlinkTestBase {
       new ImportEdge<>(0L, 0L, 1L, "a", PropertyList.createFromMap(properties)),
       new ImportEdge<>(1L, 1L, 0L, "b", PropertyList.createFromMap(properties)));
 
-    LogicalGraph expected =
+    FlinkLogicalGraph expected =
       getLoaderFromString("expected[" +
         "(a:A {foo = 42});" +
         "(b:B {foo = 42});" +
@@ -68,7 +68,7 @@ public class GraphIOTest extends GradoopFlinkTestBase {
     GraphDataSource<Long> dataSource = new GraphDataSource<>(
       importVertices, importEdges, getConfig());
 
-    LogicalGraph output = dataSource.getLogicalGraph();
+    FlinkLogicalGraph output = dataSource.getLogicalGraph();
 
     collectAndAssertTrue(output.equalsByElementData(expected));
   }
