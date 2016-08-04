@@ -17,7 +17,6 @@
 
 package org.gradoop.common.io.api;
 
-import org.gradoop.common.config.GradoopConfig;
 import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.api.operators.GraphTransactions;
 import org.gradoop.common.model.api.operators.LogicalGraph;

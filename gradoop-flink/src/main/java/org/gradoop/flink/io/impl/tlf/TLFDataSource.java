@@ -27,6 +27,7 @@ import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.api.operators.GraphTransactions;
 import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.GraphTransaction;
+import org.gradoop.common.model.impl.pojo.GraphTransactionFactory;
 import org.gradoop.flink.io.impl.tlf.functions.Dictionary;
 import org.gradoop.flink.io.impl.tlf.functions.DictionaryEntry;
 import org.gradoop.flink.io.impl.tlf.functions.EdgeLabelDecoder;
@@ -114,7 +115,8 @@ public class TLFDataSource extends TLFBase implements DataSource {
       .map(new GraphTransactionFromTLFGraph(
         getConfig().getGraphHeadFactory(),
         getConfig().getVertexFactory(),
-        getConfig().getEdgeFactory()));
+        getConfig().getEdgeFactory(),
+        new GraphTransactionFactory()));
 
     // map the integer valued labels to strings from dictionary
     if (hasVertexDictionary()) {

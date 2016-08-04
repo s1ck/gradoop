@@ -22,7 +22,7 @@ package org.gradoop.common.model.api.entities;
  *
  * @param <EL> EPGM element type
  */
-public interface EPGMElementFactory<EL extends EPGMElement> {
+public interface EPGMElementFactory<EL> {
   /**
    * Returns the type of the instances produced by that factory.
    *

@@ -23,6 +23,7 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.java.typeutils.ResultTypeQueryable;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
+import org.gradoop.common.model.impl.pojo.GraphTransactionFactory;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.io.impl.tlf.tuples.TLFEdge;
 import org.gradoop.flink.io.impl.tlf.tuples.TLFGraph;
@@ -62,9 +63,9 @@ public class GraphTransactionFromTLFGraph implements
   private final EdgeFactory edgeFactory;
 
   /**
-   * Reduce object instantiation.
+   * Creates graph transactions
    */
-  private GraphTransaction graphTransaction;
+  private final GraphTransactionFactory graphTransactionFactory;
 
   /**
    * Creates a map function.
@@ -74,12 +75,12 @@ public class GraphTransactionFromTLFGraph implements
    * @param edgeFactory      edge data factory
    */
   public GraphTransactionFromTLFGraph(GraphHeadFactory graphHeadFactory,
-    VertexFactory vertexFactory, EdgeFactory edgeFactory) {
+    VertexFactory vertexFactory, EdgeFactory edgeFactory,
+    GraphTransactionFactory graphTransactionFactory) {
     this.graphHeadFactory = graphHeadFactory;
     this.vertexFactory = vertexFactory;
     this.edgeFactory = edgeFactory;
-
-    prepareForProducedType();
+    this.graphTransactionFactory = graphTransactionFactory;
   }
 
   /**
@@ -134,23 +135,6 @@ public class GraphTransactionFromTLFGraph implements
    * @return type information of GraphTransaction
    */
   public TypeInformation<GraphTransaction> getProducedType() {
-    return TypeExtractor.getForObject(this.graphTransaction);
-  }
-
-  /**
-   * In order to return the produced type one GraphTransaction has to be
-   * initiated.
-   */
-  private void prepareForProducedType() {
-    Set<Vertex> vertices = Sets.newHashSetWithExpectedSize(2);
-    Set<Edge> edges = Sets.newHashSetWithExpectedSize(1);
-    Vertex source = this.vertexFactory.createVertex();
-    Vertex target = this.vertexFactory.createVertex();
-    vertices.add(source);
-    vertices.add(target);
-    edges.add(this.edgeFactory.createEdge(source.getId(), target.getId()));
-
-    graphTransaction = new GraphTransaction(this.graphHeadFactory
-      .initGraphHead(GradoopId.get()), vertices, edges);
+    return TypeExtractor.getForClass(this.graphTransactionFactory.getType());
   }
 }

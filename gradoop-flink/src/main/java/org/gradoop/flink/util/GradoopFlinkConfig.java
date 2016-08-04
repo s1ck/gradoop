@@ -23,6 +23,7 @@ import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.EdgeFactory;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.GraphHeadFactory;
+import org.gradoop.common.model.impl.pojo.GraphTransactionFactory;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.pojo.VertexFactory;
 import org.gradoop.common.storage.api.EdgeHandler;
