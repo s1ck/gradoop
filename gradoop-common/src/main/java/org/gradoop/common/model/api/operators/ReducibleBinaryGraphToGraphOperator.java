@@ -17,10 +17,17 @@
 
 package org.gradoop.common.model.api.operators;
 
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMVertex;
+
 /**
  * A marker interface for instances of {@link BinaryGraphToGraphOperator} that
  * support the reduction of a collection to a single logical graph.
  */
 public interface ReducibleBinaryGraphToGraphOperator
-  extends UnaryCollectionToGraphOperator {
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
+    LG extends LogicalGraph<G, V, E, LG, GC>,
+    GC extends GraphCollection<G, V, E, LG, GC>>
+  extends UnaryCollectionToGraphOperator<G, V, E, LG, GC> {
 }

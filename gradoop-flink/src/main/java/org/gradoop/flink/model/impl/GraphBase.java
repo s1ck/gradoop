@@ -36,7 +36,8 @@ import java.util.Collection;
  * @see FlinkLogicalGraph
  * @see FlinkGraphCollection
  */
-public abstract class GraphBase implements GraphBaseOperators {
+public abstract class GraphBase implements
+  GraphBaseOperators<GraphHead, Vertex, Edge> {
   /**
    * Gradoop Flink configuration.
    */

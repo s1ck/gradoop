@@ -17,10 +17,18 @@
 
 package org.gradoop.common.model.api.operators;
 
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMVertex;
+
 /**
  * Creates a {@link LogicalGraph} based on two input graphs.
  */
-public interface BinaryGraphToGraphOperator extends Operator {
+public interface BinaryGraphToGraphOperator
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
+    LG extends LogicalGraph<G, V, E, LG, GC>,
+    GC extends GraphCollection<G, V, E, LG, GC>>
+  extends Operator {
   /**
    * Executes the operator.
    *
@@ -28,5 +36,5 @@ public interface BinaryGraphToGraphOperator extends Operator {
    * @param secondGraph second input graph
    * @return operator result
    */
-  LogicalGraph execute(LogicalGraph firstGraph, LogicalGraph secondGraph);
+  LG execute(LG firstGraph, LG secondGraph);
 }

@@ -22,13 +22,14 @@ import com.google.common.base.Strings;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.log4j.Logger;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.api.operators.UnaryGraphToCollectionOperator;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.properties.PropertyValue;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.PairElementWithPropertyValue;
 import org.gradoop.flink.model.impl.operators.matching.common.debug.PrintIdWithCandidates;
 import org.gradoop.flink.model.impl.operators.matching.common.debug.PrintTripleWithCandidates;
@@ -40,8 +41,8 @@ import org.gradoop.flink.model.impl.operators.matching.common.tuples.TripleWithC
 /**
  * Base class for pattern matching implementations.
  */
-public abstract class PatternMatching implements
-  UnaryGraphToCollectionOperator {
+public abstract class PatternMatching implements UnaryGraphToCollectionOperator
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection> {
   /**
    * GDL based query string
    */
@@ -85,12 +86,12 @@ public abstract class PatternMatching implements
   }
 
   @Override
-  public GraphCollection execute(LogicalGraph graph) {
+  public FlinkGraphCollection execute(FlinkLogicalGraph graph) {
     if (log.isDebugEnabled()) {
       initDebugMappings(graph);
     }
 
-    GraphCollection result;
+    FlinkGraphCollection result;
 
     if (queryHandler.isSingleVertexGraph()) {
       result = executeForVertex(graph);
@@ -107,7 +108,8 @@ public abstract class PatternMatching implements
    * @param graph data graph
    * @return result collection
    */
-  protected abstract GraphCollection executeForVertex(LogicalGraph graph);
+  protected abstract FlinkGraphCollection executeForVertex(
+    FlinkLogicalGraph graph);
 
   /**
    * Computes the result for pattern query graph.
@@ -115,7 +117,8 @@ public abstract class PatternMatching implements
    * @param graph data graph
    * @return result collection
    */
-  protected abstract GraphCollection executeForPattern(LogicalGraph graph);
+  protected abstract FlinkGraphCollection executeForPattern(
+    FlinkLogicalGraph graph);
 
   /**
    * Returns the query handler used by the concrete implementation.
@@ -194,7 +197,7 @@ public abstract class PatternMatching implements
    *
    * @param graph data graph
    */
-  private void initDebugMappings(LogicalGraph graph) {
+  private void initDebugMappings(FlinkLogicalGraph graph) {
     vertexMapping = graph.getVertices()
       .map(new PairElementWithPropertyValue<Vertex>("id"));
     edgeMapping = graph.getEdges()

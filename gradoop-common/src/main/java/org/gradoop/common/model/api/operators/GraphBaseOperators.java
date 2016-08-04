@@ -21,6 +21,9 @@ import org.apache.flink.api.java.DataSet;
 import org.apache.hadoop.yarn.state.Graph;
 import org.gradoop.common.config.GradoopConfig;
 import org.gradoop.common.io.api.DataSink;
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMVertex;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
@@ -33,8 +36,13 @@ import java.io.IOException;
  *
  * @see LogicalGraph
  * @see GraphCollection
+ *
+ * @param <G> EPGM graph head type
+ * @param <V> EPGM vertex type
+ * @param <E> EPGM edge type
  */
-public interface GraphBaseOperators {
+public interface GraphBaseOperators
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge> {
 
   //----------------------------------------------------------------------------
   // Containment methods
@@ -45,14 +53,14 @@ public interface GraphBaseOperators {
    *
    * @return vertices
    */
-  DataSet<Vertex> getVertices();
+  DataSet<V> getVertices();
 
   /**
    * Returns all edge data associated with that logical graph.
    *
    * @return edges
    */
-  DataSet<Edge> getEdges();
+  DataSet<E> getEdges();
 
   /**
    * Returns the edge data associated with the outgoing edges of the given
@@ -72,7 +80,7 @@ public interface GraphBaseOperators {
    * @return incoming edge data of given vertex
    */
   @Deprecated
-  DataSet<Edge> getIncomingEdges(final GradoopId vertexID);
+  DataSet<E> getIncomingEdges(final GradoopId vertexID);
 
   //----------------------------------------------------------------------------
   // Utility methods
@@ -89,7 +97,12 @@ public interface GraphBaseOperators {
    */
   DataSet<Boolean> isEmpty();
 
-  GradoopConfig<GraphHead, Vertex, Edge> getConfig();
+  /**
+   * Returns the config attached to that graph / graph collection.
+   *
+   * @return gradoop config
+   */
+  GradoopConfig<G, V, E> getConfig();
 
   /**
    * Writes logical graph/graph collection to given data sink.

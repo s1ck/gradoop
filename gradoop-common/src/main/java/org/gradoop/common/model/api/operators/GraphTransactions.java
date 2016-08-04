@@ -19,22 +19,24 @@ package org.gradoop.common.model.api.operators;
 
 import org.apache.flink.api.java.DataSet;
 import org.gradoop.common.config.GradoopConfig;
-import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.common.model.impl.pojo.GraphHead;
-import org.gradoop.common.model.impl.pojo.GraphTransaction;
-import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMGraphTransaction;
+import org.gradoop.common.model.api.entities.EPGMVertex;
 
 /**
  * Describes all operators that can be applied on a single logical graph in the
  * EPGM.
  */
-public interface GraphTransactions {
+public interface GraphTransactions
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
+    GT extends EPGMGraphTransaction<G, V, E>> {
 
   /**
    * Getter.
    * @return data set of graph transactions
    */
-  DataSet<GraphTransaction> getTransactions();
+  DataSet<GT> getTransactions();
 
-  GradoopConfig<GraphHead, Vertex, Edge> getConfig();
+  GradoopConfig<G, V, E> getConfig();
 }

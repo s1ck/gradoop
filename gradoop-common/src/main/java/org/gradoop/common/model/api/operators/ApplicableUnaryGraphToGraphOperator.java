@@ -17,10 +17,17 @@
 
 package org.gradoop.common.model.api.operators;
 
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMVertex;
+
 /**
  * A marker interface for instances of {@link UnaryGraphToGraphOperator} that
  * support the application on each element in a graph collection.
  */
 public interface ApplicableUnaryGraphToGraphOperator
-  extends UnaryCollectionToCollectionOperator {
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
+    LG extends LogicalGraph<G, V, E, LG, GC>,
+    GC extends GraphCollection<G, V, E, LG, GC>>
+  extends UnaryCollectionToCollectionOperator<G, V, E, LG, GC> {
 }

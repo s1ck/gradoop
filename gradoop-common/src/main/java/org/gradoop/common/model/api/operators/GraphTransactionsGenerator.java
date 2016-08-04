@@ -16,14 +16,22 @@
  */
 package org.gradoop.common.model.api.operators;
 
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMGraphTransaction;
+import org.gradoop.common.model.api.entities.EPGMVertex;
+
 /**
  * Generates a set of graph transactions
  */
-public interface GraphTransactionsGenerator extends Operator {
+public interface GraphTransactionsGenerator
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
+    GT extends EPGMGraphTransaction<G, V, E>>
+  extends Operator {
 
   /**
    * generates the graph transactions
    * @return graph collection
    */
-  GraphTransactions execute();
+  GraphTransactions<G, V, E, GT> execute();
 }

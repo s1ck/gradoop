@@ -74,7 +74,6 @@ public class PredictableTransactionsGenerator implements
 
     DataSet<GraphTransaction> transactions = graphNumbers
       .map(new PredictableTransaction(graphSize, multigraph, config));
-//      .returns(GraphTransaction.getTypeInformation(config));
 
     return new FlinkGraphTransactions(transactions, config);
   }

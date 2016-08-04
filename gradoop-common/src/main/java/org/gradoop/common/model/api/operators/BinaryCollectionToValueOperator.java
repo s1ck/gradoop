@@ -18,13 +18,20 @@
 package org.gradoop.common.model.api.operators;
 
 import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMVertex;
 
 /**
  * Creates a (usually 1-element) Boolean dataset based on two input graphs.
  *
  * @param <T> value type
  */
-public interface BinaryCollectionToValueOperator<T> extends Operator {
+public interface BinaryCollectionToValueOperator
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
+    LG extends LogicalGraph<G, V, E, LG, GC>,
+    GC extends GraphCollection<G, V, E, LG, GC>, T>
+  extends Operator {
   /**
    * Executes the operator.
    *
@@ -32,6 +39,5 @@ public interface BinaryCollectionToValueOperator<T> extends Operator {
    * @param secondCollection second input collection
    * @return operator result
    */
-  DataSet<T> execute(GraphCollection firstCollection,
-    GraphCollection secondCollection);
+  DataSet<T> execute(GC firstCollection, GC secondCollection);
 }

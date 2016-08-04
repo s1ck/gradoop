@@ -69,7 +69,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Represents a logical graph inside the EPGM.
  */
-public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
+public class FlinkLogicalGraph extends GraphBase implements
+  LogicalGraph<GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection> {
 
   /**
    * Creates a new logical graph based on the given parameters.
@@ -159,7 +160,6 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * @param config      Gradoop Flink configuration
    * @return Logical graph
    */
-  @SuppressWarnings("unchecked")
   public static FlinkLogicalGraph fromCollections(GraphHead graphHead,
     Collection<Vertex> vertices, Collection<Edge> edges,
     GradoopFlinkConfig config) {
@@ -249,7 +249,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public GraphCollection match(String pattern) {
+  public FlinkGraphCollection match(String pattern) {
     return match(pattern, true);
   }
 
@@ -257,7 +257,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public GraphCollection match(String pattern, boolean attachData) {
+  public FlinkGraphCollection match(String pattern, boolean attachData) {
     return callForCollection(new ExplorativeSubgraphIsomorphism(
       pattern, attachData, new DFSTraverser()));
   }
@@ -266,7 +266,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph copy() {
+  public FlinkLogicalGraph copy() {
     return callForGraph(new Cloning());
   }
 
@@ -274,7 +274,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph transform(
+  public FlinkLogicalGraph transform(
     TransformationFunction<GraphHead> graphHeadTransformationFunction,
     TransformationFunction<Vertex> vertexTransformationFunction,
     TransformationFunction<Edge> edgeTransformationFunction) {
@@ -285,19 +285,19 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
   }
 
   @Override
-  public LogicalGraph transformGraphHead(
+  public FlinkLogicalGraph transformGraphHead(
     TransformationFunction<GraphHead> graphHeadTransformationFunction) {
     return transform(graphHeadTransformationFunction, null, null);
   }
 
   @Override
-  public LogicalGraph transformVertices(
+  public FlinkLogicalGraph transformVertices(
     TransformationFunction<Vertex> vertexTransformationFunction) {
     return transform(null, vertexTransformationFunction, null);
   }
 
   @Override
-  public LogicalGraph transformEdges(
+  public FlinkLogicalGraph transformEdges(
     TransformationFunction<Edge> edgeTransformationFunction) {
     return transform(null, null, edgeTransformationFunction);
   }
@@ -306,9 +306,8 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph vertexInducedSubgraph(
+  public FlinkLogicalGraph vertexInducedSubgraph(
     FilterFunction<Vertex> vertexFilterFunction) {
-    checkNotNull(vertexFilterFunction);
     return callForGraph(new Subgraph(vertexFilterFunction, null));
   }
 
@@ -316,9 +315,8 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph edgeInducedSubgraph(
+  public FlinkLogicalGraph edgeInducedSubgraph(
     FilterFunction<Edge> edgeFilterFunction) {
-    checkNotNull(edgeFilterFunction);
     return callForGraph(new Subgraph(null, edgeFilterFunction));
   }
 
@@ -326,10 +324,8 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph subgraph(FilterFunction<Vertex> vertexFilterFunction,
+  public FlinkLogicalGraph subgraph(FilterFunction<Vertex> vertexFilterFunction,
     FilterFunction<Edge> edgeFilterFunction) {
-    checkNotNull(vertexFilterFunction);
-    checkNotNull(edgeFilterFunction);
     return callForGraph(
       new Subgraph(vertexFilterFunction, edgeFilterFunction));
   }
@@ -338,7 +334,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph aggregate(String propertyKey,
+  public FlinkLogicalGraph aggregate(String propertyKey,
     AggregateFunction aggregateFunc) {
     return callForGraph(new Aggregation(propertyKey, aggregateFunc));
   }
@@ -347,7 +343,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph sampleRandomNodes(Float sampleSize) {
+  public FlinkLogicalGraph sampleRandomNodes(Float sampleSize) {
     return callForGraph(new RandomNodeSampling(sampleSize));
   }
 
@@ -355,7 +351,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupBy(List<String> vertexGroupingKeys) {
+  public FlinkLogicalGraph groupBy(List<String> vertexGroupingKeys) {
     return groupBy(vertexGroupingKeys, null);
   }
 
@@ -363,7 +359,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupBy(List<String> vertexGroupingKeys,
+  public FlinkLogicalGraph groupBy(List<String> vertexGroupingKeys,
     List<String> edgeGroupingKeys) {
     GroupingBuilder builder = new GroupingBuilder();
 
@@ -387,7 +383,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupByVertexLabel() {
+  public FlinkLogicalGraph groupByVertexLabel() {
     return groupByVertexLabel(null, null);
   }
 
@@ -395,7 +391,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupByVertexLabelAndVertexProperties(
+  public FlinkLogicalGraph groupByVertexLabelAndVertexProperties(
     List<String> vertexGroupingKeys) {
     return groupByVertexLabel(vertexGroupingKeys, null);
   }
@@ -404,7 +400,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupByVertexLabelAndEdgeProperties(
+  public FlinkLogicalGraph groupByVertexLabelAndEdgeProperties(
     List<String> edgeGroupingKeys) {
     return groupByVertexLabel(null, edgeGroupingKeys);
   }
@@ -413,7 +409,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupByVertexLabel(List<String> vertexGroupingKeys,
+  public FlinkLogicalGraph groupByVertexLabel(List<String> vertexGroupingKeys,
     List<String> edgeGroupingKeys) {
     GroupingBuilder builder = new GroupingBuilder();
 
@@ -436,7 +432,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupByVertexAndEdgeLabel() {
+  public FlinkLogicalGraph groupByVertexAndEdgeLabel() {
     return groupByVertexAndEdgeLabel(null, null);
   }
 
@@ -444,7 +440,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupByVertexAndEdgeLabelAndVertexProperties(
+  public FlinkLogicalGraph groupByVertexAndEdgeLabelAndVertexProperties(
     List<String> vertexGroupingKeys) {
     return groupByVertexAndEdgeLabel(vertexGroupingKeys, null);
   }
@@ -453,7 +449,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupByVertexAndEdgeLabelAndEdgeProperties(
+  public FlinkLogicalGraph groupByVertexAndEdgeLabelAndEdgeProperties(
     List<String> edgeGroupingKeys) {
     return groupByVertexAndEdgeLabel(null, edgeGroupingKeys);
   }
@@ -462,7 +458,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph groupByVertexAndEdgeLabel(
+  public FlinkLogicalGraph groupByVertexAndEdgeLabel(
     List<String> vertexGroupingKeys, List<String> edgeGroupingKeys) {
     GroupingBuilder builder = new GroupingBuilder();
 
@@ -489,7 +485,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph combine(LogicalGraph otherGraph) {
+  public FlinkLogicalGraph combine(FlinkLogicalGraph otherGraph) {
     return callForGraph(new Combination(), otherGraph);
   }
 
@@ -497,7 +493,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph overlap(LogicalGraph otherGraph) {
+  public FlinkLogicalGraph overlap(FlinkLogicalGraph otherGraph) {
     return callForGraph(new Overlap(), otherGraph);
   }
 
@@ -505,7 +501,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph exclude(LogicalGraph otherGraph) {
+  public FlinkLogicalGraph exclude(FlinkLogicalGraph otherGraph) {
     return callForGraph(new Exclusion(), otherGraph);
   }
 
@@ -513,7 +509,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public DataSet<Boolean> equalsByElementIds(LogicalGraph other) {
+  public DataSet<Boolean> equalsByElementIds(FlinkLogicalGraph other) {
     return new GraphEquality(
       new GraphHeadToEmptyString(),
       new VertexToIdString(),
@@ -524,7 +520,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public DataSet<Boolean> equalsByElementData(LogicalGraph other) {
+  public DataSet<Boolean> equalsByElementData(FlinkLogicalGraph other) {
     return new GraphEquality(
       new GraphHeadToEmptyString(),
       new VertexToDataString(),
@@ -535,7 +531,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public DataSet<Boolean> equalsByData(LogicalGraph other) {
+  public DataSet<Boolean> equalsByData(FlinkLogicalGraph other) {
     return new GraphEquality(
       new GraphHeadToDataString(),
       new VertexToDataString(),
@@ -550,7 +546,9 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph callForGraph(UnaryGraphToGraphOperator operator) {
+  public FlinkLogicalGraph callForGraph(UnaryGraphToGraphOperator
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection>
+    operator) {
     return operator.execute(this);
   }
 
@@ -558,8 +556,9 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph callForGraph(BinaryGraphToGraphOperator operator,
-    LogicalGraph otherGraph) {
+  public FlinkLogicalGraph callForGraph(BinaryGraphToGraphOperator
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection> operator,
+    FlinkLogicalGraph otherGraph) {
     return operator.execute(this, otherGraph);
   }
 
@@ -567,8 +566,9 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public GraphCollection callForCollection(
-    UnaryGraphToCollectionOperator operator) {
+  public FlinkGraphCollection callForCollection(UnaryGraphToCollectionOperator
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection>
+    operator) {
     return operator.execute(this);
   }
 
@@ -576,7 +576,7 @@ public class FlinkLogicalGraph extends GraphBase implements LogicalGraph {
    * {@inheritDoc}
    */
   @Override
-  public GraphCollection splitBy(String propertyKey) {
+  public FlinkGraphCollection splitBy(String propertyKey) {
     return callForCollection(
       new Split(
         new PropertyGetter<Vertex>(Lists.newArrayList(propertyKey))));

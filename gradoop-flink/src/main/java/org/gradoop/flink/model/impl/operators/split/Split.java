@@ -22,8 +22,6 @@ import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.gradoop.common.model.api.functions.UnaryFunction;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.api.operators.UnaryGraphToCollectionOperator;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.id.GradoopIdSet;
@@ -32,6 +30,7 @@ import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.properties.PropertyValue;
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.PairTupleWithNewId;
 import org.gradoop.flink.model.impl.functions.epgm.SourceId;
@@ -55,7 +54,9 @@ import java.util.List;
  * can be in more than one logical graph. Edges, where source and target vertex
  * have no graphs in common, are removed from the resulting collection.
  */
-public class Split implements UnaryGraphToCollectionOperator, Serializable {
+public class Split implements UnaryGraphToCollectionOperator
+  <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection>,
+  Serializable {
 
   /**
    * User-defined function for value extraction
@@ -75,7 +76,7 @@ public class Split implements UnaryGraphToCollectionOperator, Serializable {
    * {@inheritDoc}
    */
   @Override
-  public GraphCollection execute(LogicalGraph graph) {
+  public FlinkGraphCollection execute(FlinkLogicalGraph graph) {
 
     //--------------------------------------------------------------------------
     // compute vertices

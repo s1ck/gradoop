@@ -25,17 +25,12 @@ import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.typeutils.TupleTypeInfo;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
 import org.apache.log4j.Logger;
-import org.gradoop.common.config.GradoopConfig;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Element;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.GraphHeadFactory;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.pojo.VertexFactory;
-import org.gradoop.common.model.api.operators.UnaryGraphToCollectionOperator;
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
@@ -80,8 +75,7 @@ import static org.apache.flink.api.common.operators.base.JoinOperatorBase.JoinHi
  * Algorithm detects subgraphs by traversing the search graph according to a
  * given traversal code which is derived from the query pattern.
  */
-public class ExplorativeSubgraphIsomorphism extends PatternMatching implements
-  UnaryGraphToCollectionOperator {
+public class ExplorativeSubgraphIsomorphism extends PatternMatching {
   /**
    * Name for broadcast set which contains the superstep id.
    */
@@ -149,7 +143,7 @@ public class ExplorativeSubgraphIsomorphism extends PatternMatching implements
   }
 
   @Override
-  protected GraphCollection executeForVertex(LogicalGraph graph) {
+  protected FlinkGraphCollection executeForVertex(FlinkLogicalGraph graph) {
     GradoopFlinkConfig config = (GradoopFlinkConfig) graph.getConfig();
     GraphHeadFactory graphHeadFactory = config.getGraphHeadFactory();
     VertexFactory vertexFactory = config.getVertexFactory();
@@ -177,7 +171,7 @@ public class ExplorativeSubgraphIsomorphism extends PatternMatching implements
   }
 
   @Override
-  protected GraphCollection executeForPattern(LogicalGraph graph) {
+  protected FlinkGraphCollection executeForPattern(FlinkLogicalGraph graph) {
 
     //--------------------------------------------------------------------------
     // Pre-processing (filter candidates + build initial embeddings)

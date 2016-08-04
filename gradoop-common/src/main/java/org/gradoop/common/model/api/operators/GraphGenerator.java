@@ -16,14 +16,22 @@
  */
 package org.gradoop.common.model.api.operators;
 
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMVertex;
+
 /**
  * Generates a logical graph
  */
-public interface GraphGenerator extends Operator {
+public interface GraphGenerator
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
+    LG extends LogicalGraph<G, V, E, LG, GC>,
+    GC extends GraphCollection<G, V, E, LG, GC>>
+  extends Operator {
 
   /**
    * generates the graph
    * @return graph collection
    */
-  LogicalGraph execute();
+  LG execute();
 }
