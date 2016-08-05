@@ -24,6 +24,7 @@ import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.common.model.api.operators.BinaryGraphToValueOperator;
+import org.gradoop.flink.model.impl.operators.FlinkBinaryGraphToValueOperator;
 import org.gradoop.flink.model.impl.operators.tostring.api.EdgeToString;
 import org.gradoop.flink.model.impl.operators.tostring.api.GraphHeadToString;
 import org.gradoop.flink.model.impl.operators.tostring.api.VertexToString;
@@ -32,7 +33,7 @@ import org.gradoop.flink.model.impl.operators.tostring.api.VertexToString;
  * Operator to determine if two graph are equal according to given string
  * representations of graph heads, vertices and edges.
  */
-public class GraphEquality implements BinaryGraphToValueOperator<Boolean> {
+public class GraphEquality implements FlinkBinaryGraphToValueOperator<Boolean> {
 
   /**
    * collection equality operator, wrapped by graph equality
@@ -61,8 +62,8 @@ public class GraphEquality implements BinaryGraphToValueOperator<Boolean> {
   }
 
   @Override
-  public DataSet<Boolean> execute(LogicalGraph firstGraph,
-    LogicalGraph secondGraph) {
+  public DataSet<Boolean> execute(FlinkLogicalGraph firstGraph,
+    FlinkLogicalGraph secondGraph) {
     return collectionEquality.execute(
       FlinkGraphCollection.fromGraph(firstGraph),
       FlinkGraphCollection.fromGraph(secondGraph)

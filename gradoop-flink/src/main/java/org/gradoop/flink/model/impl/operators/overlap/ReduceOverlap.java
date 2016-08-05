@@ -35,21 +35,18 @@
 package org.gradoop.flink.model.impl.operators.overlap;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
-import org.gradoop.common.model.impl.pojo.GraphHead;
-import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.common.model.api.operators.ReducibleBinaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.FlinkGraphCollection;
-import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.flink.model.impl.functions.epgm.Id;
+import org.gradoop.flink.model.impl.operators.FlinkReducibleBinaryGraphToGraphOperator;
 
 /**
  * Computes the overlap graph from a collection of logical graphs.
  */
 public class ReduceOverlap extends OverlapBase implements
-  ReducibleBinaryGraphToGraphOperator {
+  FlinkReducibleBinaryGraphToGraphOperator {
 
   /**
    * Creates a new logical graph containing the overlapping vertex and edge sets
@@ -60,7 +57,7 @@ public class ReduceOverlap extends OverlapBase implements
    * @return graph with overlapping elements from the input collection
    */
   @Override
-  public LogicalGraph execute(GraphCollection collection) {
+  public FlinkLogicalGraph execute(FlinkGraphCollection collection) {
     DataSet<GraphHead> graphHeads = collection.getGraphHeads();
 
     DataSet<GradoopId> graphIDs = graphHeads.map(new Id<GraphHead>());
@@ -68,7 +65,7 @@ public class ReduceOverlap extends OverlapBase implements
     return FlinkLogicalGraph.fromDataSets(
       getVertices(collection.getVertices(), graphIDs),
       getEdges(collection.getEdges(), graphIDs),
-      (GradoopFlinkConfig) collection.getConfig());
+      collection.getConfig());
   }
 
   @Override

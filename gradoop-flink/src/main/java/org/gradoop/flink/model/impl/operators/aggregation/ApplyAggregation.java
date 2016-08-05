@@ -19,16 +19,17 @@ package org.gradoop.flink.model.impl.operators.aggregation;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.api.functions.ApplyAggregateFunction;
-import org.gradoop.common.model.api.operators.ApplicableUnaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.FlinkGraphCollection;
-import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.model.impl.operators.aggregation.functions.LeftOuterPropertySetter;
+import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.properties.PropertyValue;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.flink.model.impl.functions.epgm.Id;
+import org.gradoop.flink.model.impl.operators.FlinkApplicableUnaryGraphToGraphOperator;
+import org.gradoop.flink.model.impl.operators.aggregation.functions.LeftOuterPropertySetter;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,7 +39,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * the collection and the aggregate is stored as an additional property at the
  * graphs.
  */
-public class ApplyAggregation implements ApplicableUnaryGraphToGraphOperator {
+public class ApplyAggregation implements
+  FlinkApplicableUnaryGraphToGraphOperator {
 
   /**
    * Used to store aggregate result.
@@ -48,7 +50,9 @@ public class ApplyAggregation implements ApplicableUnaryGraphToGraphOperator {
   /**
    * User-defined aggregate function which is applied on a graph collection.
    */
-  private final ApplyAggregateFunction aggregateFunction;
+  private final ApplyAggregateFunction<GraphHead, Vertex, Edge,
+    FlinkLogicalGraph, FlinkGraphCollection,
+    DataSet<Tuple2<GradoopId, PropertyValue>>> aggregateFunction;
 
   /**
    * Creates a new operator instance.
@@ -57,13 +61,15 @@ public class ApplyAggregation implements ApplicableUnaryGraphToGraphOperator {
    * @param aggregateFunction     function to compute aggregate value
    */
   public ApplyAggregation(final String aggregatePropertyKey,
-    final ApplyAggregateFunction aggregateFunction) {
+    final ApplyAggregateFunction<GraphHead, Vertex, Edge, FlinkLogicalGraph,
+      FlinkGraphCollection, DataSet<Tuple2<GradoopId, PropertyValue>>>
+      aggregateFunction) {
     this.aggregatePropertyKey = checkNotNull(aggregatePropertyKey);
     this.aggregateFunction = checkNotNull(aggregateFunction);
   }
 
   @Override
-  public GraphCollection execute(GraphCollection collection) {
+  public FlinkGraphCollection execute(FlinkGraphCollection collection) {
     DataSet<Tuple2<GradoopId, PropertyValue>> aggregateValues =
       aggregateFunction.execute(collection);
 
@@ -77,7 +83,7 @@ public class ApplyAggregation implements ApplicableUnaryGraphToGraphOperator {
     return FlinkGraphCollection.fromDataSets(graphHeads,
       collection.getVertices(),
       collection.getEdges(),
-      (GradoopFlinkConfig) collection.getConfig());
+      collection.getConfig());
   }
 
   @Override

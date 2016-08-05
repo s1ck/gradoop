@@ -17,22 +17,27 @@
 
 package org.gradoop.common.model.api.functions;
 
-import org.apache.flink.api.java.DataSet;
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMVertex;
+import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.api.operators.LogicalGraph;
-import org.gradoop.common.model.impl.properties.PropertyValue;
 
 /**
- * Describes an aggregate function as input for the
- * {@link Aggregation} operator.
+ * Describes an aggregation on a logical graph.
  */
-public interface AggregateFunction {
+public interface AggregateFunction
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
+    LG extends LogicalGraph<G, V, E, LG, GC, AGG_OUT, BOOL_OUT>,
+    GC extends GraphCollection<G, V, E, LG, GC, AGG_OUT, BOOL_OUT>,
+    AGG_OUT, BOOL_OUT> {
 
   /**
    * Defines the aggregate function.
    *
    * @param graph input graph
-   * @return aggregated value as 1-element dataset
+   * @return aggregated value
    */
-  DataSet<PropertyValue> execute(LogicalGraph graph);
+  AGG_OUT execute(LG graph);
 
 }

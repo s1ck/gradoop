@@ -18,14 +18,15 @@
 package org.gradoop.flink.model.impl.operators.aggregation;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.LogicalGraph;
-import org.gradoop.common.model.impl.pojo.GraphHead;
-import org.gradoop.common.model.impl.properties.PropertyValue;
 import org.gradoop.common.model.api.functions.AggregateFunction;
-import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
+import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.common.model.impl.properties.PropertyValue;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.PropertySetterBroadcast;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphToGraphOperator;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * aggregate function is applied on the logical graph and the resulting
  * aggregate is stored as an additional property at the result graph.
  */
-public class Aggregation implements UnaryGraphToGraphOperator {
+public class Aggregation implements FlinkUnaryGraphToGraphOperator {
 
   /**
    * Used to store aggregate result.
@@ -44,29 +45,33 @@ public class Aggregation implements UnaryGraphToGraphOperator {
   /**
    * User-defined aggregate function which is applied on a single logical graph.
    */
-  private final AggregateFunction aggregationFunction;
+  private final AggregateFunction<GraphHead, Vertex, Edge, FlinkLogicalGraph,
+    FlinkGraphCollection, DataSet<PropertyValue>, DataSet<Boolean>>
+    aggregateFunction;
 
   /**
    * Creates new aggregation.
    *
-   * @param aggregatePropertyKey property key to store result of {@code
-   *                             aggregationFunction}
-   * @param aggregationFunction  user defined aggregation function which gets
+   * @param aggregatePropertyKey property key to store result of
+   *                             {@code aggregateFunction}
+   * @param aggregateFunction    user defined aggregation function which gets
    *                             called on the input graph
    */
   public Aggregation(final String aggregatePropertyKey,
-    final AggregateFunction aggregationFunction) {
+    final AggregateFunction<GraphHead, Vertex, Edge, FlinkLogicalGraph,
+      FlinkGraphCollection, DataSet<PropertyValue>, DataSet<Boolean>>
+      aggregateFunction) {
     this.aggregatePropertyKey = checkNotNull(aggregatePropertyKey);
-    this.aggregationFunction = checkNotNull(aggregationFunction);
+    this.aggregateFunction = checkNotNull(aggregateFunction);
   }
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph execute(LogicalGraph graph) {
+  public FlinkLogicalGraph execute(FlinkLogicalGraph graph) {
 
-    DataSet<PropertyValue> aggregateValue = aggregationFunction.execute(graph);
+    DataSet<PropertyValue> aggregateValue = aggregateFunction.execute(graph);
 
     DataSet<GraphHead> graphHead = graph.getGraphHead()
       .map(new PropertySetterBroadcast<GraphHead>(aggregatePropertyKey))
@@ -76,7 +81,7 @@ public class Aggregation implements UnaryGraphToGraphOperator {
       graphHead,
       graph.getVertices(),
       graph.getEdges(),
-      (GradoopFlinkConfig) graph.getConfig());
+      graph.getConfig());
   }
 
   /**

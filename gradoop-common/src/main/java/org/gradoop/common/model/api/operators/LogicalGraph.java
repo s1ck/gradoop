@@ -18,7 +18,6 @@
 package org.gradoop.common.model.api.operators;
 
 import org.apache.flink.api.common.functions.FilterFunction;
-import org.apache.flink.api.java.DataSet;
 import org.gradoop.common.model.api.entities.EPGMEdge;
 import org.gradoop.common.model.api.entities.EPGMGraphHead;
 import org.gradoop.common.model.api.entities.EPGMVertex;
@@ -40,17 +39,10 @@ import java.util.List;
  */
 public interface LogicalGraph
   <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
-    LG extends LogicalGraph<G, V, E, LG, GC>,
-    GC extends GraphCollection<G, V, E, LG, GC>> 
+    LG extends LogicalGraph<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT>,
+    GC extends GraphCollection<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT>,
+    AGG_OUT, EQUAL_OUT>
   extends GraphBaseOperators<G, V, E> {
-
-  /**
-   * Returns a dataset containing a single graph head associated with that
-   * logical graph.
-   *
-   * @return 1-element dataset
-   */
-  DataSet<G> getGraphHead();
 
   //----------------------------------------------------------------------------
   // Unary Operators
@@ -178,7 +170,8 @@ public interface LogicalGraph
    * @param aggregateFunc computes an aggregate on the logical graph
    * @return logical graph with additional property storing the aggregate
    */
-  LG aggregate(String propertyKey, AggregateFunction aggregateFunc);
+  LG aggregate(String propertyKey,
+    AggregateFunction<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT>  aggregateFunc);
 
   /**
    * Creates a new graph from a randomly chosen subset of nodes and their
@@ -187,7 +180,7 @@ public interface LogicalGraph
    * @param sampleSize relative amount of nodes in the result graph
    * @return logical graph with random nodes and their associated edges
    */
-  LG sampleRandomNodes(Float sampleSize);
+  LG sampleRandomNodes(float sampleSize);
 
   /**
    * Creates a condensed version of the logical graph by grouping vertices
@@ -327,7 +320,7 @@ public interface LogicalGraph
    * @param other other graph
    * @return 1-element dataset containing true, if equal by element ids
    */
-  DataSet<Boolean> equalsByElementIds(LG other);
+  EQUAL_OUT equalsByElementIds(LG other);
 
   /**
    * Checks, if another logical graph contains vertices and edges with the same
@@ -336,7 +329,7 @@ public interface LogicalGraph
    * @param other other graph
    * @return 1-element dataset containing true, iff equal by element data
    */
-  DataSet<Boolean> equalsByElementData(LG other);
+  EQUAL_OUT equalsByElementData(LG other);
 
   /**
    * Checks, if another logical graph has the same attached data and contains
@@ -345,7 +338,7 @@ public interface LogicalGraph
    * @param other other graph
    * @return 1-element dataset containing true, iff equal by element data
    */
-  DataSet<Boolean> equalsByData(LG other);
+  EQUAL_OUT equalsByData(LG other);
 
   //----------------------------------------------------------------------------
   // Binary Operators
@@ -404,7 +397,7 @@ public interface LogicalGraph
    * @param operator unary graph to graph operator
    * @return result of given operator
    */
-  LG callForGraph(UnaryGraphToGraphOperator<G, V, E, LG, GC> operator);
+  LG callForGraph(UnaryGraphToGraphOperator<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT> operator);
 
   /**
    * Creates a logical graph from that graph and the input graph using the
@@ -414,7 +407,7 @@ public interface LogicalGraph
    * @param otherGraph other graph
    * @return result of given operator
    */
-  LG callForGraph(BinaryGraphToGraphOperator<G, V, E, LG, GC> operator,
+  LG callForGraph(BinaryGraphToGraphOperator<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT> operator,
     LG otherGraph);
 
   /**
@@ -425,5 +418,5 @@ public interface LogicalGraph
    * @return result of given operator
    */
   GC callForCollection(
-    UnaryGraphToCollectionOperator<G, V, E, LG, GC> operator);
+    UnaryGraphToCollectionOperator<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT> operator);
 }

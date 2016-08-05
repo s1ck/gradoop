@@ -19,13 +19,11 @@ package org.gradoop.flink.model.impl.operators.aggregation.functions.max;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
-import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.model.impl.operators.aggregation.functions.AggregateWithDefaultValueFunction;
 import org.gradoop.common.model.impl.properties.PropertyValue;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.flink.model.impl.operators.aggregation.functions.AggregateWithDefaultValueFunction;
 
 /**
  * Aggregate function returning the maximum of a specified property over all
@@ -58,7 +56,7 @@ public class MaxEdgeProperty extends AggregateWithDefaultValueFunction {
    * @return 1-element dataset with vertex count
    */
   @Override
-  public DataSet<PropertyValue> execute(LogicalGraph graph) {
+  public DataSet<PropertyValue> execute(FlinkLogicalGraph graph) {
     return Max.max(graph.getEdges(),
       propertyKey,
       getDefaultValue());
@@ -73,7 +71,7 @@ public class MaxEdgeProperty extends AggregateWithDefaultValueFunction {
    */
   @Override
   public DataSet<Tuple2<GradoopId, PropertyValue>> execute(
-    GraphCollection collection) {
+    FlinkGraphCollection collection) {
     return Max.groupBy(collection.getEdges(),
       propertyKey,
       getDefaultValue());

@@ -22,21 +22,17 @@ import org.apache.flink.api.java.operators.DeltaIteration;
 import org.apache.flink.api.java.operators.IterativeDataSet;
 import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.log4j.Logger;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.common.model.impl.pojo.VertexFactory;
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.flink.model.impl.functions.utils.RightSide;
-import org.gradoop.flink.model.impl.operators.matching.common.PreProcessor;
-import org.gradoop.flink.util.GradoopFlinkConfig;
-import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.VertexFromId;
-import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.flink.model.impl.functions.utils.RightSide;
 import org.gradoop.flink.model.impl.operators.matching.PatternMatching;
 import org.gradoop.flink.model.impl.operators.matching.common.PostProcessor;
+import org.gradoop.flink.model.impl.operators.matching.common.PreProcessor;
 import org.gradoop.flink.model.impl.operators.matching.common.debug.Printer;
 import org.gradoop.flink.model.impl.operators.matching.common.query.QueryHandler;
 import org.gradoop.flink.model.impl.operators.matching.common.tuples.TripleWithCandidates;
@@ -55,7 +51,7 @@ import org.gradoop.flink.model.impl.operators.matching.simulation.dual.functions
 import org.gradoop.flink.model.impl.operators.matching.simulation.dual.tuples.Deletion;
 import org.gradoop.flink.model.impl.operators.matching.simulation.dual.tuples.FatVertex;
 import org.gradoop.flink.model.impl.operators.matching.simulation.dual.tuples.Message;
-
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Vertex-centric Dual-Simulation.
@@ -86,7 +82,7 @@ public class DualSimulation extends PatternMatching {
   }
 
   @Override
-  protected GraphCollection executeForVertex(LogicalGraph graph)  {
+  protected FlinkGraphCollection executeForVertex(FlinkLogicalGraph graph)  {
     DataSet<Tuple1<GradoopId>> matchingVertexIds = PreProcessor
       .filterVertices(graph, getQuery())
       .project(0);
@@ -97,13 +93,12 @@ public class DualSimulation extends PatternMatching {
             .join(graph.getVertices())
             .where(0).equalTo(new Id<Vertex>())
             .with(new RightSide<Tuple1<GradoopId>, Vertex>()),
-          (GradoopFlinkConfig) graph.getConfig()));
+          graph.getConfig()));
     } else {
       return FlinkGraphCollection.fromGraph(
         FlinkLogicalGraph.fromDataSets(matchingVertexIds
-            .map(new VertexFromId(
-              (VertexFactory) graph.getConfig().getVertexFactory())),
-          (GradoopFlinkConfig) graph.getConfig()));
+            .map(new VertexFromId(graph.getConfig().getVertexFactory())),
+          graph.getConfig()));
     }
   }
 
@@ -114,7 +109,7 @@ public class DualSimulation extends PatternMatching {
    * @return match graph
    */
   @Override
-  protected GraphCollection executeForPattern(LogicalGraph graph) {
+  protected FlinkGraphCollection executeForPattern(FlinkLogicalGraph graph) {
     //--------------------------------------------------------------------------
     // Pre-processing (filter candidates + build initial working set)
     //--------------------------------------------------------------------------
@@ -150,7 +145,7 @@ public class DualSimulation extends PatternMatching {
    * @param g input graph
    * @return triples that have a match in the query graph
    */
-  private DataSet<TripleWithCandidates> filterTriples(LogicalGraph g) {
+  private DataSet<TripleWithCandidates> filterTriples(FlinkLogicalGraph g) {
     // filter vertex-edge-vertex triples by query predicates
     return PreProcessor.filterTriplets(g, getQuery());
   }
@@ -319,9 +314,9 @@ public class DualSimulation extends PatternMatching {
    * @param vertices valid vertices after simulation
    * @return maximum match graph
    */
-  private FlinkGraphCollection postProcess(LogicalGraph graph,
+  private FlinkGraphCollection postProcess(FlinkLogicalGraph graph,
     DataSet<FatVertex> vertices) {
-    GradoopFlinkConfig config = (GradoopFlinkConfig) graph.getConfig();
+    GradoopFlinkConfig config = graph.getConfig();
 
     DataSet<Vertex> matchVertices = doAttachData() ?
       PostProcessor.extractVerticesWithData(vertices, graph.getVertices()) :

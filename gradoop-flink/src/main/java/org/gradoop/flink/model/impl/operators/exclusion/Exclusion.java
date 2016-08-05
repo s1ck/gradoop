@@ -47,12 +47,13 @@ import org.gradoop.flink.model.impl.functions.epgm.SourceId;
 import org.gradoop.flink.model.impl.functions.graphcontainment.NotInGraphBroadcast;
 import org.gradoop.flink.model.impl.functions.utils.LeftSide;
 import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.flink.model.impl.operators.FlinkBinaryGraphToGraphOperator;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Computes the exclusion graph from two logical graphs.
  */
-public class Exclusion implements BinaryGraphToGraphOperator {
+public class Exclusion implements FlinkBinaryGraphToGraphOperator {
 
   /**
    * Creates a new logical graph containing only vertices and edges that exist
@@ -64,8 +65,8 @@ public class Exclusion implements BinaryGraphToGraphOperator {
    * @return first graph without elements from second graph
    */
   @Override
-  public LogicalGraph execute(LogicalGraph firstGraph,
-    LogicalGraph secondGraph) {
+  public FlinkLogicalGraph execute(FlinkLogicalGraph firstGraph,
+    FlinkLogicalGraph secondGraph) {
 
     DataSet<GradoopId> graphId = secondGraph.getGraphHead()
       .map(new Id<GraphHead>());
@@ -87,7 +88,7 @@ public class Exclusion implements BinaryGraphToGraphOperator {
       .with(new LeftSide<Edge, Vertex>());
 
     return FlinkLogicalGraph.fromDataSets(newVertexSet, newEdgeSet,
-      (GradoopFlinkConfig) firstGraph.getConfig());
+      firstGraph.getConfig());
   }
 
   /**

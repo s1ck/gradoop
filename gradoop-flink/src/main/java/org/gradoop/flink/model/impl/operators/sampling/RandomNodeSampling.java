@@ -18,26 +18,22 @@
 package org.gradoop.flink.model.impl.operators.sampling;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
-import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.flink.model.impl.functions.epgm.TargetId;
 import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
-import org.gradoop.flink.model.impl.functions.utils.LeftSide;
 import org.gradoop.flink.model.impl.functions.epgm.SourceId;
+import org.gradoop.flink.model.impl.functions.epgm.TargetId;
+import org.gradoop.flink.model.impl.functions.utils.LeftSide;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphToGraphOperator;
 import org.gradoop.flink.model.impl.operators.sampling.functions.VertexRandomFilter;
-
-
-import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Takes a logical graph and a user defined aggregate function as input. The
  * aggregate function is applied on the logical graph and the resulting
  * aggregate is stored as an additional property at the result graph.
  */
-public class RandomNodeSampling implements UnaryGraphToGraphOperator {
+public class RandomNodeSampling implements FlinkUnaryGraphToGraphOperator {
   /**
    * relative amount of nodes in the result graph
    */
@@ -73,7 +69,7 @@ public class RandomNodeSampling implements UnaryGraphToGraphOperator {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph execute(LogicalGraph graph) {
+  public FlinkLogicalGraph execute(FlinkLogicalGraph graph) {
 
     DataSet<Vertex> newVertices = graph.getVertices()
       .filter(new VertexRandomFilter<>(sampleSize, randomSeed));
@@ -89,7 +85,7 @@ public class RandomNodeSampling implements UnaryGraphToGraphOperator {
       .with(new LeftSide<Edge, Vertex>());
 
     return FlinkLogicalGraph.fromDataSets(newVertices, newEdges,
-      (GradoopFlinkConfig) graph.getConfig());
+      graph.getConfig());
   }
 
   /**

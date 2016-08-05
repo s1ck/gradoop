@@ -18,27 +18,19 @@
 package org.gradoop.flink.model.impl.operators.grouping;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.flink.model.impl.operators.grouping.functions
-  .BuildSuperVertex;
-import org.gradoop.flink.model.impl.operators.grouping.functions
-  .BuildVertexGroupItem;
-import org.gradoop.flink.model.impl.operators.grouping.functions
-  .BuildVertexWithSuperVertex;
+import org.gradoop.flink.model.impl.operators.grouping.functions.BuildSuperVertex;
+import org.gradoop.flink.model.impl.operators.grouping.functions.BuildVertexGroupItem;
+import org.gradoop.flink.model.impl.operators.grouping.functions.BuildVertexWithSuperVertex;
 import org.gradoop.flink.model.impl.operators.grouping.functions.FilterRegularVertices;
 import org.gradoop.flink.model.impl.operators.grouping.functions.FilterSuperVertices;
 import org.gradoop.flink.model.impl.operators.grouping.functions.ReduceVertexGroupItems;
+import org.gradoop.flink.model.impl.operators.grouping.functions.aggregation.PropertyValueAggregator;
 import org.gradoop.flink.model.impl.operators.grouping.tuples.EdgeGroupItem;
 import org.gradoop.flink.model.impl.operators.grouping.tuples.VertexGroupItem;
-import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.flink.model.impl.operators.grouping.functions.aggregation.PropertyValueAggregator;
-
 import org.gradoop.flink.model.impl.operators.grouping.tuples.VertexWithSuperVertex;
-
-
-import org.gradoop.flink.util.GradoopFlinkConfig;
 
 import java.util.List;
 
@@ -91,7 +83,7 @@ public class GroupingGroupReduce extends Grouping {
    * {@inheritDoc}
    */
   @Override
-  protected LogicalGraph groupInternal(LogicalGraph graph) {
+  protected FlinkLogicalGraph groupInternal(FlinkLogicalGraph graph) {
 
     DataSet<VertexGroupItem> verticesForGrouping = graph.getVertices()
       // map vertex to vertex group item
@@ -124,7 +116,7 @@ public class GroupingGroupReduce extends Grouping {
       vertexToRepresentativeMap);
 
     return FlinkLogicalGraph.fromDataSets(superVertices, superEdges,
-      (GradoopFlinkConfig) graph.getConfig());
+      graph.getConfig());
   }
 
   /**

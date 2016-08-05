@@ -21,11 +21,13 @@ import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.gradoop.common.model.api.functions.AggregateFunction;
 import org.gradoop.common.model.api.functions.ApplyAggregateFunction;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.properties.PropertyValue;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.ToPropertyValue;
 import org.gradoop.flink.model.impl.functions.graphcontainment.ExpandGraphsToIds;
 import org.gradoop.flink.model.impl.operators.aggregation.functions.GroupCountToPropertyValue;
@@ -34,7 +36,9 @@ import org.gradoop.flink.model.impl.operators.count.Count;
 /**
  * Aggregate function returning the edge count of a graph / collection.
  */
-public class EdgeCount implements AggregateFunction, ApplyAggregateFunction {
+public class EdgeCount implements AggregateFunction<GraphHead, Vertex, Edge, FlinkLogicalGraph,
+    FlinkGraphCollection, DataSet<PropertyValue>, DataSet<Boolean>>,ApplyAggregateFunction<GraphHead, Vertex, Edge, FlinkLogicalGraph,
+        FlinkGraphCollection, DataSet<Tuple2<GradoopId, PropertyValue>>, DataSet<Boolean>> {
 
   /**
    * Returns a 1-element dataset containing the edge count of the given graph.
@@ -43,7 +47,7 @@ public class EdgeCount implements AggregateFunction, ApplyAggregateFunction {
    * @return 1-element dataset with vertex count
    */
   @Override
-  public DataSet<PropertyValue> execute(LogicalGraph graph) {
+  public DataSet<PropertyValue> execute(FlinkLogicalGraph graph) {
     return Count
       .count(graph.getEdges())
       .map(new ToPropertyValue<Long>());
@@ -58,7 +62,7 @@ public class EdgeCount implements AggregateFunction, ApplyAggregateFunction {
    */
   @Override
   public DataSet<Tuple2<GradoopId, PropertyValue>> execute(
-    GraphCollection collection) {
+    FlinkGraphCollection collection) {
     return Count.groupBy(
       collection.getEdges()
         .flatMap(new ExpandGraphsToIds<Edge>())

@@ -24,13 +24,13 @@ import org.gradoop.common.io.api.DataSink;
 import org.gradoop.common.model.api.functions.AggregateFunction;
 import org.gradoop.common.model.api.functions.TransformationFunction;
 import org.gradoop.common.model.api.operators.BinaryGraphToGraphOperator;
-import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.api.operators.UnaryGraphToCollectionOperator;
 import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.common.model.impl.properties.PropertyValue;
 import org.gradoop.flink.model.impl.functions.bool.Not;
 import org.gradoop.flink.model.impl.functions.bool.Or;
 import org.gradoop.flink.model.impl.functions.bool.True;
@@ -69,8 +69,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Represents a logical graph inside the EPGM.
  */
-public class FlinkLogicalGraph extends GraphBase implements
-  LogicalGraph<GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection> {
+public class FlinkLogicalGraph extends FlinkGraphBase implements LogicalGraph
+  <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection,
+    DataSet<PropertyValue>, DataSet<Boolean>> {
 
   /**
    * Creates a new logical graph based on the given parameters.
@@ -235,7 +236,10 @@ public class FlinkLogicalGraph extends GraphBase implements
   //----------------------------------------------------------------------------
 
   /**
-   * {@inheritDoc}
+   * Returns a dataset containing a single graph head associated with that
+   * logical graph.
+   *
+   * @return 1-element dataset
    */
   public DataSet<GraphHead> getGraphHead() {
     return super.getGraphHeads();
@@ -335,7 +339,9 @@ public class FlinkLogicalGraph extends GraphBase implements
    */
   @Override
   public FlinkLogicalGraph aggregate(String propertyKey,
-    AggregateFunction aggregateFunc) {
+    AggregateFunction<GraphHead, Vertex, Edge, FlinkLogicalGraph,
+      FlinkGraphCollection, DataSet<PropertyValue>, DataSet<Boolean>>
+      aggregateFunc) {
     return callForGraph(new Aggregation(propertyKey, aggregateFunc));
   }
 
@@ -343,7 +349,7 @@ public class FlinkLogicalGraph extends GraphBase implements
    * {@inheritDoc}
    */
   @Override
-  public FlinkLogicalGraph sampleRandomNodes(Float sampleSize) {
+  public FlinkLogicalGraph sampleRandomNodes(float sampleSize) {
     return callForGraph(new RandomNodeSampling(sampleSize));
   }
 
@@ -547,8 +553,8 @@ public class FlinkLogicalGraph extends GraphBase implements
    */
   @Override
   public FlinkLogicalGraph callForGraph(UnaryGraphToGraphOperator
-    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection>
-    operator) {
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection,
+      DataSet<PropertyValue>, DataSet<Boolean>> operator) {
     return operator.execute(this);
   }
 
@@ -557,7 +563,8 @@ public class FlinkLogicalGraph extends GraphBase implements
    */
   @Override
   public FlinkLogicalGraph callForGraph(BinaryGraphToGraphOperator
-    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection> operator,
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection,
+      DataSet<PropertyValue>, DataSet<Boolean>> operator,
     FlinkLogicalGraph otherGraph) {
     return operator.execute(this, otherGraph);
   }
@@ -567,8 +574,8 @@ public class FlinkLogicalGraph extends GraphBase implements
    */
   @Override
   public FlinkGraphCollection callForCollection(UnaryGraphToCollectionOperator
-    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection>
-    operator) {
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection,
+      DataSet<PropertyValue>, DataSet<Boolean>> operator) {
     return operator.execute(this);
   }
 
@@ -578,8 +585,7 @@ public class FlinkLogicalGraph extends GraphBase implements
   @Override
   public FlinkGraphCollection splitBy(String propertyKey) {
     return callForCollection(
-      new Split(
-        new PropertyGetter<Vertex>(Lists.newArrayList(propertyKey))));
+      new Split(new PropertyGetter<Vertex>(Lists.newArrayList(propertyKey))));
   }
 
   //----------------------------------------------------------------------------

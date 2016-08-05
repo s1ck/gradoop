@@ -18,19 +18,16 @@
 package org.gradoop.flink.model.impl.operators.matching.common;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.flink.model.impl.operators.matching.common.tuples
-  .IdWithCandidates;
 import org.gradoop.flink.model.impl.operators.matching.common.functions.BuildIdWithCandidates;
 import org.gradoop.flink.model.impl.operators.matching.common.functions.BuildTripleWithCandidates;
 import org.gradoop.flink.model.impl.operators.matching.common.functions.MatchingEdges;
 import org.gradoop.flink.model.impl.operators.matching.common.functions.MatchingPairs;
 import org.gradoop.flink.model.impl.operators.matching.common.functions.MatchingTriples;
 import org.gradoop.flink.model.impl.operators.matching.common.functions.MatchingVertices;
-
-import org.gradoop.flink.model.impl.operators.matching.common.tuples.TripleWithSourceEdgeCandidates;
+import org.gradoop.flink.model.impl.operators.matching.common.tuples.IdWithCandidates;
 import org.gradoop.flink.model.impl.operators.matching.common.tuples.TripleWithCandidates;
+import org.gradoop.flink.model.impl.operators.matching.common.tuples.TripleWithSourceEdgeCandidates;
 
 /**
  * Provides methods for filtering vertices, edges, pairs (vertex + edge) and
@@ -47,8 +44,8 @@ public class PreProcessor {
    * @param query query graph
    * @return dataset with matching vertex ids and their candidates
    */
-  public static DataSet<IdWithCandidates> filterVertices(LogicalGraph graph,
-    final String query) {
+  public static DataSet<IdWithCandidates> filterVertices(
+    FlinkLogicalGraph graph, final String query) {
     return graph.getVertices()
       .filter(new MatchingVertices<>(query))
       .map(new BuildIdWithCandidates<>(query));
@@ -62,8 +59,8 @@ public class PreProcessor {
    * @param query query graph
    * @return dataset with matching edge triples and their candidates
    */
-  public static DataSet<TripleWithCandidates> filterEdges(LogicalGraph graph,
-    final String query) {
+  public static DataSet<TripleWithCandidates> filterEdges(
+    FlinkLogicalGraph graph, final String query) {
     return graph.getEdges()
       .filter(new MatchingEdges<>(query))
       .map(new BuildTripleWithCandidates<>(query));
@@ -96,7 +93,7 @@ public class PreProcessor {
    * @return dataset with matching vertex-edge pairs and their candidates
    */
   public static
-  DataSet<TripleWithSourceEdgeCandidates> filterPairs(LogicalGraph graph,
+  DataSet<TripleWithSourceEdgeCandidates> filterPairs(FlinkLogicalGraph graph,
     final String query, DataSet<IdWithCandidates> filteredVertices) {
     return filteredVertices
       .join(filterEdges(graph, query))
@@ -114,7 +111,7 @@ public class PreProcessor {
    * @return dataset with matching triples
    */
   public static
-  DataSet<TripleWithCandidates> filterTriplets(LogicalGraph graph,
+  DataSet<TripleWithCandidates> filterTriplets(FlinkLogicalGraph graph,
     final String query) {
     return filterTriplets(graph, query, filterVertices(graph, query));
   }
@@ -129,8 +126,9 @@ public class PreProcessor {
    * @param filteredVertices  used for the edge join
    * @return dataset with matching triples and their candidates
    */
-  public static DataSet<TripleWithCandidates> filterTriplets(LogicalGraph graph,
-    final String query, DataSet<IdWithCandidates> filteredVertices) {
+  public static DataSet<TripleWithCandidates> filterTriplets(
+    FlinkLogicalGraph graph, final String query,
+    DataSet<IdWithCandidates> filteredVertices) {
     return filterPairs(graph, query, filteredVertices)
       .join(filteredVertices)
       .where(3).equalTo(0)

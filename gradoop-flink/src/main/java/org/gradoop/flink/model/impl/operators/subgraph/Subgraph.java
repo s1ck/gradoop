@@ -19,17 +19,15 @@ package org.gradoop.flink.model.impl.operators.subgraph;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.flink.model.impl.functions.epgm.TargetId;
-import org.gradoop.flink.model.impl.functions.utils.RightSide;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.SourceId;
+import org.gradoop.flink.model.impl.functions.epgm.TargetId;
 import org.gradoop.flink.model.impl.functions.utils.LeftSide;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.functions.utils.RightSide;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphToGraphOperator;
 
 /**
  * Extracts a subgraph from a logical graph using the given filter functions.
@@ -41,7 +39,7 @@ import org.gradoop.flink.util.GradoopFlinkConfig;
  *
  * Note that option 3) does not verify the consistency of the resulting graph.
  */
-public class Subgraph implements UnaryGraphToGraphOperator {
+public class Subgraph implements FlinkUnaryGraphToGraphOperator {
 
   /**
    * Used to filter vertices from the logical graph.
@@ -78,7 +76,7 @@ public class Subgraph implements UnaryGraphToGraphOperator {
   }
 
   @Override
-  public LogicalGraph execute(LogicalGraph superGraph) {
+  public FlinkLogicalGraph execute(FlinkLogicalGraph superGraph) {
     return vertexFilterFunction != null && edgeFilterFunction != null ?
       subgraph(superGraph) : vertexFilterFunction != null ?
       vertexInducedSubgraph(superGraph) : edgeInducedSubgraph(superGraph);
@@ -91,7 +89,9 @@ public class Subgraph implements UnaryGraphToGraphOperator {
    * @param superGraph supergraph
    * @return vertex-induced subgraph
    */
-  private LogicalGraph vertexInducedSubgraph(LogicalGraph superGraph) {
+  private FlinkLogicalGraph vertexInducedSubgraph(
+    FlinkLogicalGraph superGraph) {
+
     DataSet<Vertex> filteredVertices = superGraph.getVertices()
       .filter(vertexFilterFunction);
 
@@ -104,7 +104,7 @@ public class Subgraph implements UnaryGraphToGraphOperator {
       .with(new LeftSide<Edge, Vertex>());
 
     return FlinkLogicalGraph.fromDataSets(filteredVertices, newEdges,
-      (GradoopFlinkConfig) superGraph.getConfig());
+      superGraph.getConfig());
   }
 
   /**
@@ -114,7 +114,7 @@ public class Subgraph implements UnaryGraphToGraphOperator {
    * @param superGraph supergraph
    * @return edge-induced subgraph
    */
-  private LogicalGraph edgeInducedSubgraph(LogicalGraph superGraph) {
+  private FlinkLogicalGraph edgeInducedSubgraph(FlinkLogicalGraph superGraph) {
     DataSet<Edge> filteredEdges = superGraph.getEdges()
       .filter(edgeFilterFunction);
 
@@ -128,8 +128,8 @@ public class Subgraph implements UnaryGraphToGraphOperator {
           .with(new RightSide<Edge, Vertex>()))
       .distinct(new Id<Vertex>());
 
-    return FlinkLogicalGraph.fromDataSets(
-      newVertices, filteredEdges, (GradoopFlinkConfig) superGraph.getConfig());
+    return FlinkLogicalGraph.fromDataSets(newVertices, filteredEdges,
+      superGraph.getConfig());
   }
 
   /**
@@ -143,11 +143,11 @@ public class Subgraph implements UnaryGraphToGraphOperator {
    * @param superGraph supergraph
    * @return subgraph
    */
-  private LogicalGraph subgraph(LogicalGraph superGraph) {
+  private FlinkLogicalGraph subgraph(FlinkLogicalGraph superGraph) {
     return FlinkLogicalGraph.fromDataSets(
       superGraph.getVertices().filter(vertexFilterFunction),
       superGraph.getEdges().filter(edgeFilterFunction),
-      (GradoopFlinkConfig) superGraph.getConfig());
+      superGraph.getConfig());
   }
 
   @Override

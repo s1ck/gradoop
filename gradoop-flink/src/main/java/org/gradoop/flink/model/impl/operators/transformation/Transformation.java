@@ -19,13 +19,12 @@ package org.gradoop.flink.model.impl.operators.transformation;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.api.functions.TransformationFunction;
-import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphToGraphOperator;
 import org.gradoop.flink.model.impl.operators.transformation.functions.TransformEdge;
 import org.gradoop.flink.model.impl.operators.transformation.functions.TransformGraphHead;
 import org.gradoop.flink.model.impl.operators.transformation.functions.TransformVertex;
@@ -38,7 +37,7 @@ import org.gradoop.flink.util.GradoopFlinkConfig;
  *
  * The identity of the elements is preserved.
  */
-public class Transformation implements UnaryGraphToGraphOperator {
+public class Transformation implements FlinkUnaryGraphToGraphOperator {
 
   /**
    * Modification function for graph heads
@@ -78,12 +77,12 @@ public class Transformation implements UnaryGraphToGraphOperator {
   }
 
   @Override
-  public LogicalGraph execute(LogicalGraph graph) {
+  public FlinkLogicalGraph execute(FlinkLogicalGraph graph) {
     return executeInternal(
       graph.getGraphHead(),
       graph.getVertices(),
       graph.getEdges(),
-      (GradoopFlinkConfig) graph.getConfig());
+      graph.getConfig());
   }
 
   /**

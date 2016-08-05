@@ -38,6 +38,7 @@ import org.gradoop.common.model.impl.pojo.GraphElement;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.GraphTransaction;
 import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.common.model.impl.properties.PropertyValue;
 import org.gradoop.common.util.Order;
 import org.gradoop.flink.model.impl.functions.bool.Not;
 import org.gradoop.flink.model.impl.functions.bool.Or;
@@ -83,9 +84,10 @@ import static org.apache.flink.shaded.com.google.common.base.Preconditions.check
  * vertices and edges, the collections contains a single gelly graph
  * representing all subgraphs. Graph data is stored in an additional dataset.
  */
-public class FlinkGraphCollection extends GraphBase implements
-  GraphCollection<GraphHead, Vertex, Edge, FlinkLogicalGraph,
-    FlinkGraphCollection> {
+public class FlinkGraphCollection extends FlinkGraphBase implements
+  GraphCollection<GraphHead, Vertex, Edge,
+    FlinkLogicalGraph, FlinkGraphCollection,
+    DataSet<PropertyValue>, DataSet<Boolean>> {
 
   /**
    * Creates a graph collection from the given arguments.
@@ -197,7 +199,7 @@ public class FlinkGraphCollection extends GraphBase implements
       logicalGraph.getGraphHead(),
       logicalGraph.getVertices(),
       logicalGraph.getEdges(),
-      (GradoopFlinkConfig) logicalGraph.getConfig());
+      logicalGraph.getConfig());
   }
 
   //----------------------------------------------------------------------------
@@ -205,7 +207,10 @@ public class FlinkGraphCollection extends GraphBase implements
   //----------------------------------------------------------------------------
 
   /**
-   * {@inheritDoc}
+   * Returns the graph heads associated with the logical graphs in that
+   * collection.
+   *
+   * @return graph heads
    */
   public DataSet<GraphHead> getGraphHeads() {
     return super.getGraphHeads();
@@ -401,8 +406,9 @@ public class FlinkGraphCollection extends GraphBase implements
    */
   @Override
   public FlinkGraphCollection callForCollection(
-    UnaryCollectionToCollectionOperator
-      <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection> op) {
+    UnaryCollectionToCollectionOperator<GraphHead, Vertex, Edge,
+      FlinkLogicalGraph, FlinkGraphCollection, DataSet<PropertyValue>,
+      DataSet<Boolean>> op) {
     return op.execute(this);
   }
 
@@ -411,8 +417,9 @@ public class FlinkGraphCollection extends GraphBase implements
    */
   @Override
   public FlinkGraphCollection callForCollection(
-    BinaryCollectionToCollectionOperator op,
-    FlinkGraphCollection otherCollection) {
+    BinaryCollectionToCollectionOperator<GraphHead, Vertex, Edge,
+      FlinkLogicalGraph, FlinkGraphCollection, DataSet<PropertyValue>,
+      DataSet<Boolean>> op, FlinkGraphCollection otherCollection) {
     return op.execute(this, otherCollection);
   }
 
@@ -420,7 +427,9 @@ public class FlinkGraphCollection extends GraphBase implements
    * {@inheritDoc}
    */
   @Override
-  public FlinkLogicalGraph callForGraph(UnaryCollectionToGraphOperator op) {
+  public FlinkLogicalGraph callForGraph(UnaryCollectionToGraphOperator
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection,
+      DataSet<PropertyValue>, DataSet<Boolean>> op) {
     return op.execute(this);
   }
 
@@ -428,7 +437,9 @@ public class FlinkGraphCollection extends GraphBase implements
    * {@inheritDoc}
    */
   @Override
-  public FlinkGraphCollection apply(ApplicableUnaryGraphToGraphOperator op) {
+  public FlinkGraphCollection apply(ApplicableUnaryGraphToGraphOperator
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection,
+      DataSet<PropertyValue>, DataSet<Boolean>> op) {
     return callForCollection(op);
   }
 
@@ -436,7 +447,9 @@ public class FlinkGraphCollection extends GraphBase implements
    * {@inheritDoc}
    */
   @Override
-  public FlinkLogicalGraph reduce(ReducibleBinaryGraphToGraphOperator op) {
+  public FlinkLogicalGraph reduce(ReducibleBinaryGraphToGraphOperator
+    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection,
+      DataSet<PropertyValue>, DataSet<Boolean>> op) {
     return callForGraph(op);
   }
 
@@ -482,8 +495,8 @@ public class FlinkGraphCollection extends GraphBase implements
    * @param edgeMergeReducer    edge merge function
    * @return graph collection
    */
-  public static FlinkGraphCollection  fromTransactions(
-    GraphTransactions transactions,
+  public static FlinkGraphCollection fromTransactions(
+    GraphTransactions<GraphHead, Vertex, Edge, GraphTransaction> transactions,
     GroupReduceFunction<Vertex, Vertex> vertexMergeReducer,
     GroupReduceFunction<Edge, Edge> edgeMergeReducer) {
 
@@ -497,13 +510,11 @@ public class FlinkGraphCollection extends GraphBase implements
 
     DataSet<Vertex> vertices = triples
       .flatMap(new TransactionVertices())
-//      .returns(config.getVertexFactory().getType())
       .groupBy(new Id<Vertex>())
       .reduceGroup(vertexMergeReducer);
 
     DataSet<Edge> edges = triples
       .flatMap(new TransactionEdges())
-//      .returns(config.getEdgeFactory().getType())
       .groupBy(new Id<Edge>())
       .reduceGroup(edgeMergeReducer);
 

@@ -18,18 +18,16 @@
 package org.gradoop.flink.model.impl.operators.combination;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.common.model.api.operators.BinaryGraphToGraphOperator;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.operators.FlinkBinaryGraphToGraphOperator;
 
 /**
  * Computes the combined graph from two logical graphs.
  */
-public class Combination implements BinaryGraphToGraphOperator {
+public class Combination implements FlinkBinaryGraphToGraphOperator {
 
   /**
    * Creates a new logical graph by union the vertex and edge sets of two
@@ -41,8 +39,8 @@ public class Combination implements BinaryGraphToGraphOperator {
    * @return combined graph
    */
   @Override
-  public LogicalGraph execute(LogicalGraph firstGraph,
-    LogicalGraph secondGraph) {
+  public FlinkLogicalGraph execute(FlinkLogicalGraph firstGraph,
+    FlinkLogicalGraph secondGraph) {
 
     DataSet<Vertex> newVertexSet = firstGraph.getVertices()
       .union(secondGraph.getVertices())
@@ -53,7 +51,7 @@ public class Combination implements BinaryGraphToGraphOperator {
       .distinct(new Id<Edge>());
 
     return FlinkLogicalGraph.fromDataSets(
-      newVertexSet, newEdgeSet, (GradoopFlinkConfig) firstGraph.getConfig());
+      newVertexSet, newEdgeSet, firstGraph.getConfig());
   }
 
   /**

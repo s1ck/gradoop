@@ -22,7 +22,6 @@ import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.gradoop.common.model.api.functions.UnaryFunction;
-import org.gradoop.common.model.api.operators.UnaryGraphToCollectionOperator;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.id.GradoopIdSet;
 import org.gradoop.common.model.impl.pojo.Edge;
@@ -35,6 +34,7 @@ import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.PairTupleWithNewId;
 import org.gradoop.flink.model.impl.functions.epgm.SourceId;
 import org.gradoop.flink.model.impl.functions.tuple.Project2To1;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphToCollectionOperator;
 import org.gradoop.flink.model.impl.operators.split.functions.AddNewGraphsToEdge;
 import org.gradoop.flink.model.impl.operators.split.functions.AddNewGraphsToVertex;
 import org.gradoop.flink.model.impl.operators.split.functions.InitGraphHead;
@@ -43,9 +43,7 @@ import org.gradoop.flink.model.impl.operators.split.functions.JoinEdgeTupleWithT
 import org.gradoop.flink.model.impl.operators.split.functions.JoinVertexIdWithGraphIds;
 import org.gradoop.flink.model.impl.operators.split.functions.MultipleGraphIdsGroupReducer;
 import org.gradoop.flink.model.impl.operators.split.functions.SplitValues;
-import org.gradoop.flink.util.GradoopFlinkConfig;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -54,9 +52,7 @@ import java.util.List;
  * can be in more than one logical graph. Edges, where source and target vertex
  * have no graphs in common, are removed from the resulting collection.
  */
-public class Split implements UnaryGraphToCollectionOperator
-  <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection>,
-  Serializable {
+public class Split implements FlinkUnaryGraphToCollectionOperator {
 
   /**
    * User-defined function for value extraction
@@ -123,8 +119,7 @@ public class Split implements UnaryGraphToCollectionOperator
 
     // add new graph id's to the initial graph set
     DataSet<GraphHead> newGraphs = newGraphIds
-      .map(new InitGraphHead(
-        ((GradoopFlinkConfig) graph.getConfig()).getGraphHeadFactory()));
+      .map(new InitGraphHead(graph.getConfig().getGraphHeadFactory()));
 
     //--------------------------------------------------------------------------
     // compute edges
@@ -150,7 +145,7 @@ public class Split implements UnaryGraphToCollectionOperator
     //--------------------------------------------------------------------------
 
     return FlinkGraphCollection.fromDataSets(
-      newGraphs, vertices, edges, (GradoopFlinkConfig) graph.getConfig());
+      newGraphs, vertices, edges, graph.getConfig());
   }
 
   /**

@@ -25,8 +25,9 @@ import org.gradoop.common.model.api.entities.EPGMVertex;
  */
 public interface GraphCollectionGenerator
   <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
-    LG extends LogicalGraph<G, V, E, LG, GC>,
-    GC extends GraphCollection<G, V, E, LG, GC>>
+    LG extends LogicalGraph<G, V, E, LG, GC, AGG_OUT, BOOL_OUT>,
+    GC extends GraphCollection<G, V, E, LG, GC, AGG_OUT, BOOL_OUT>,
+    AGG_OUT, BOOL_OUT>
   extends Operator {
 
   /**

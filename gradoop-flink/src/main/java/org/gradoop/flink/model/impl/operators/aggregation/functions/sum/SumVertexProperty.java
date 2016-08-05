@@ -19,11 +19,11 @@ package org.gradoop.flink.model.impl.operators.aggregation.functions.sum;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
 import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.model.impl.operators.aggregation.functions.AggregateWithDefaultValueFunction;
 import org.gradoop.common.model.impl.properties.PropertyValue;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.flink.model.impl.operators.aggregation.functions.AggregateWithDefaultValueFunction;
 
 /**
  * Aggregate function returning the sum of a specified property over all
@@ -56,7 +56,7 @@ public class SumVertexProperty extends AggregateWithDefaultValueFunction {
    * @return 1-element dataset with vertex count
    */
   @Override
-  public DataSet<PropertyValue> execute(LogicalGraph graph) {
+  public DataSet<PropertyValue> execute(FlinkLogicalGraph graph) {
     return Sum.sum(
       graph.getVertices(),
       propertyKey,
@@ -72,7 +72,7 @@ public class SumVertexProperty extends AggregateWithDefaultValueFunction {
    */
   @Override
   public DataSet<Tuple2<GradoopId, PropertyValue>> execute(
-    GraphCollection collection) {
+    FlinkGraphCollection collection) {
     return Sum.groupBy(
       collection.getVertices(),
       propertyKey,

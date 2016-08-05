@@ -20,10 +20,9 @@ package org.gradoop.flink.model.impl.operators.grouping;
 import com.google.common.collect.Lists;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.operators.UnsortedGrouping;
-import org.gradoop.common.model.api.operators.LogicalGraph;
-import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphToGraphOperator;
 import org.gradoop.flink.model.impl.operators.grouping.functions.BuildEdgeGroupItem;
 import org.gradoop.flink.model.impl.operators.grouping.functions.CombineEdgeGroupItems;
 import org.gradoop.flink.model.impl.operators.grouping.functions.ReduceEdgeGroupItems;
@@ -76,7 +75,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * In addition to vertex properties, grouping is also possible on edge
  * properties, vertex- and edge labels as well as combinations of those.
  */
-public abstract class Grouping implements UnaryGraphToGraphOperator {
+public abstract class Grouping implements FlinkUnaryGraphToGraphOperator {
 
   /**
    * Gradoop Flink configuration.
@@ -136,10 +135,10 @@ public abstract class Grouping implements UnaryGraphToGraphOperator {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph execute(LogicalGraph graph) {
-    LogicalGraph result;
+  public FlinkLogicalGraph execute(FlinkLogicalGraph graph) {
+    FlinkLogicalGraph result;
 
-    config = (GradoopFlinkConfig) graph.getConfig();
+    config = graph.getConfig();
 
     if (!useVertexProperties() &&
       !useEdgeProperties() &&
@@ -272,7 +271,7 @@ public abstract class Grouping implements UnaryGraphToGraphOperator {
    *                                  and super vertex id
    * @return super edges
    */
-  protected DataSet<Edge> buildSuperEdges(LogicalGraph graph,
+  protected DataSet<Edge> buildSuperEdges(FlinkLogicalGraph graph,
     DataSet<VertexWithSuperVertex> vertexToRepresentativeMap) {
 
     DataSet<EdgeGroupItem> edges = graph.getEdges()
@@ -311,7 +310,7 @@ public abstract class Grouping implements UnaryGraphToGraphOperator {
    * @param graph input graph
    * @return grouped output graph
    */
-  protected abstract LogicalGraph groupInternal(LogicalGraph graph);
+  protected abstract FlinkLogicalGraph groupInternal(FlinkLogicalGraph graph);
 
   /**
    * Used for building a grouping operator instance.

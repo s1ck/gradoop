@@ -58,7 +58,7 @@ public class MinEdgeProperty extends AggregateWithDefaultValueFunction {
    * @return 1-element dataset with vertex count
    */
   @Override
-  public DataSet<PropertyValue> execute(LogicalGraph graph) {
+  public DataSet<PropertyValue> execute(FlinkLogicalGraph graph) {
     return Min.min(graph.getEdges(),
       propertyKey,
       getDefaultValue());
@@ -73,7 +73,7 @@ public class MinEdgeProperty extends AggregateWithDefaultValueFunction {
    */
   @Override
   public DataSet<Tuple2<GradoopId, PropertyValue>> execute(
-    GraphCollection collection) {
+    FlinkGraphCollection collection) {
     return Min.groupBy(collection.getEdges(),
       propertyKey,
       getDefaultValue());

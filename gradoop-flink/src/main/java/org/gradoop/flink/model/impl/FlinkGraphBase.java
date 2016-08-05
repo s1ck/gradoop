@@ -36,7 +36,7 @@ import java.util.Collection;
  * @see FlinkLogicalGraph
  * @see FlinkGraphCollection
  */
-public abstract class GraphBase implements
+public abstract class FlinkGraphBase implements
   GraphBaseOperators<GraphHead, Vertex, Edge> {
   /**
    * Gradoop Flink configuration.
@@ -63,7 +63,7 @@ public abstract class GraphBase implements
    * @param edges       edge data set
    * @param config      Gradoop Flink configuration
    */
-  protected GraphBase(DataSet<GraphHead> graphHeads, DataSet<Vertex> vertices,
+  protected FlinkGraphBase(DataSet<GraphHead> graphHeads, DataSet<Vertex> vertices,
     DataSet<Edge> edges, GradoopFlinkConfig config) {
     this.graphHeads = graphHeads;
     this.vertices = vertices;
@@ -153,25 +153,31 @@ public abstract class GraphBase implements
   }
 
   /**
-   * {@inheritDoc}
+   * Returns all vertices including vertex data associated with that graph.
+   *
+   * @return vertices
    */
-  @Override
   public DataSet<Vertex> getVertices() {
     return vertices;
   }
 
   /**
-   * {@inheritDoc}
+   * Returns all edge data associated with that logical graph.
+   *
+   * @return edges
    */
-  @Override
   public DataSet<Edge> getEdges() {
     return edges;
   }
 
   /**
-   * {@inheritDoc}
+   * Returns the edge data associated with the outgoing edges of the given
+   * vertex.
+   *
+   * @param vertexID vertex identifier
+   * @return outgoing edge data of given vertex
    */
-  @Override
+  @Deprecated
   public DataSet<Edge> getOutgoingEdges(final GradoopId vertexID) {
     return
       this.edges.filter(new FilterFunction<Edge>() {
@@ -183,9 +189,13 @@ public abstract class GraphBase implements
   }
 
   /**
-   * {@inheritDoc}
+   * Returns the edge data associated with the incoming edges of the given
+   * vertex.
+   *
+   * @param vertexID vertex identifier
+   * @return incoming edge data of given vertex
    */
-  @Override
+  @Deprecated
   public DataSet<Edge> getIncomingEdges(final GradoopId vertexID) {
     return
       this.edges.filter(new FilterFunction<Edge>() {
@@ -195,6 +205,17 @@ public abstract class GraphBase implements
         }
       });
   }
+
+  /**
+   * Returns a 1-element dataset containing a {@code boolean} value which
+   * indicates if the collection is empty.
+   *
+   * A collection is considered empty, if it contains no logical graphs.
+   *
+   * @return  1-element dataset containing {@code true}, if the collection is
+   *          empty or {@code false} if not
+   */
+  public abstract DataSet<Boolean> isEmpty();
 
   /**
    * Returns the graphHeads associated with that graph / graph collection.

@@ -58,7 +58,7 @@ public class MaxVertexProperty extends AggregateWithDefaultValueFunction {
    * @return 1-element dataset with vertex count
    */
   @Override
-  public DataSet<PropertyValue> execute(LogicalGraph graph) {
+  public DataSet<PropertyValue> execute(FlinkLogicalGraph graph) {
     return Max.max(
       graph.getVertices(),
       propertyKey,
@@ -74,7 +74,7 @@ public class MaxVertexProperty extends AggregateWithDefaultValueFunction {
    */
   @Override
   public DataSet<Tuple2<GradoopId, PropertyValue>> execute(
-    GraphCollection collection) {
+    FlinkGraphCollection collection) {
     return Max.groupBy(collection.getVertices(),
       propertyKey,
       getDefaultValue());

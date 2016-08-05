@@ -18,20 +18,15 @@
 package org.gradoop.flink.model.impl.operators.limit;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.common.model.api.operators.UnaryCollectionToCollectionOperator;
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
-import org.gradoop.flink.model.impl.functions.graphcontainment
-  .GraphsContainmentFilterBroadcast;
+import org.gradoop.flink.model.impl.functions.graphcontainment.GraphsContainmentFilterBroadcast;
 import org.gradoop.flink.model.impl.functions.graphcontainment.InAllGraphsBroadcast;
-
-
-import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryCollectionToCollectionOperator;
 
 /**
  * Returns the first n (arbitrary) logical graphs from a collection.
@@ -39,7 +34,7 @@ import org.gradoop.flink.util.GradoopFlinkConfig;
  * Note that this operator uses broadcasting to distribute the relevant graph
  * identifiers.
  */
-public class Limit implements UnaryCollectionToCollectionOperator {
+public class Limit implements FlinkUnaryCollectionToCollectionOperator {
 
   /**
    * Number of graphs that are retrieved from the collection.
@@ -56,7 +51,7 @@ public class Limit implements UnaryCollectionToCollectionOperator {
   }
 
   @Override
-  public GraphCollection execute(GraphCollection collection) {
+  public FlinkGraphCollection execute(FlinkGraphCollection collection) {
 
     DataSet<GraphHead> graphHeads = collection.getGraphHeads().first(limit);
 
@@ -73,7 +68,7 @@ public class Limit implements UnaryCollectionToCollectionOperator {
     return FlinkGraphCollection.fromDataSets(graphHeads,
       filteredVertices,
       filteredEdges,
-      (GradoopFlinkConfig) collection.getConfig());
+      collection.getConfig());
   }
 
   @Override

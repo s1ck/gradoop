@@ -17,25 +17,22 @@
 
 package org.gradoop.flink.model.impl.operators.transformation;
 
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
-import org.gradoop.common.model.impl.pojo.GraphHead;
-import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.api.functions.TransformationFunction;
 import org.gradoop.common.model.api.operators.ApplicableUnaryGraphToGraphOperator;
-
-
+import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.operators
+  .FlinkApplicableUnaryGraphToGraphOperator;
 
 /**
  * Applies the transformation operator on on all logical graphs in a graph
  * collection.
  */
 public class ApplyTransformation extends Transformation implements
-  ApplicableUnaryGraphToGraphOperator {
+  FlinkApplicableUnaryGraphToGraphOperator {
 
   /**
    * Creates a new operator instance.
@@ -51,13 +48,13 @@ public class ApplyTransformation extends Transformation implements
   }
 
   @Override
-  public GraphCollection execute(GraphCollection collection) {
+  public FlinkGraphCollection execute(FlinkGraphCollection collection) {
     // the resulting logical graph holds multiple graph heads
     FlinkLogicalGraph modifiedGraph = executeInternal(
       collection.getGraphHeads(),
       collection.getVertices(),
       collection.getEdges(),
-      (GradoopFlinkConfig) collection.getConfig());
+      collection.getConfig());
 
     return FlinkGraphCollection.fromDataSets(modifiedGraph.getGraphHead(),
       modifiedGraph.getVertices(),

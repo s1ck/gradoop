@@ -25,8 +25,8 @@ import java.util.Set;
 /**
  * An encapsulated representation of a logical graph with duplicated elements.
  */
-public class GraphTransaction implements
-  EPGMGraphTransaction<GraphHead, Vertex, Edge>, Serializable {
+public class GraphTransaction implements EPGMGraphTransaction
+  <GraphHead, Vertex, Edge>, Serializable {
 
   private GraphHead graphHead;
 

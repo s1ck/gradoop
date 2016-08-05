@@ -19,22 +19,15 @@ package org.gradoop.flink.model.impl.operators.selection;
 
 import org.apache.flink.api.common.functions.FilterFunction;
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.GraphCollection;
+import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.common.model.api.operators.UnaryCollectionToCollectionOperator;
-
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
-import org.gradoop.flink.model.impl.functions.graphcontainment
-  .GraphsContainmentFilterBroadcast;
+import org.gradoop.flink.model.impl.functions.graphcontainment.GraphsContainmentFilterBroadcast;
 import org.gradoop.flink.model.impl.functions.graphcontainment.InAnyGraphBroadcast;
-
-
-
-import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryCollectionToCollectionOperator;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -42,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Filter logical graphs from a graph collection based on their associated graph
  * head.
  */
-public class Selection implements UnaryCollectionToCollectionOperator {
+public class Selection implements FlinkUnaryCollectionToCollectionOperator {
 
   /**
    * User-defined predicate function
@@ -59,7 +52,7 @@ public class Selection implements UnaryCollectionToCollectionOperator {
   }
 
   @Override
-  public GraphCollection execute(GraphCollection collection) {
+  public FlinkGraphCollection execute(FlinkGraphCollection collection) {
     // find graph heads matching the predicate
     DataSet<GraphHead> graphHeads = collection.getGraphHeads()
       .filter(predicate);
@@ -77,7 +70,7 @@ public class Selection implements UnaryCollectionToCollectionOperator {
       .withBroadcastSet(graphIDs, GraphsContainmentFilterBroadcast.GRAPH_IDS);
 
     return FlinkGraphCollection.fromDataSets(graphHeads, vertices, edges,
-      (GradoopFlinkConfig) collection.getConfig());
+      collection.getConfig());
   }
 
   @Override

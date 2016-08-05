@@ -21,26 +21,25 @@ import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple1;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.api.java.typeutils.TypeExtractor;
-import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.EdgeFactory;
 import org.gradoop.common.model.impl.pojo.Element;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.common.model.impl.pojo.VertexFactory;
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
+import org.gradoop.flink.model.impl.functions.epgm.EdgeFromIds;
+import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.MergedGraphIds;
+import org.gradoop.flink.model.impl.functions.epgm.VertexFromId;
+import org.gradoop.flink.model.impl.functions.utils.Cast;
 import org.gradoop.flink.model.impl.functions.utils.IsInstance;
 import org.gradoop.flink.model.impl.functions.utils.RightSide;
 import org.gradoop.flink.model.impl.operators.matching.simulation.dual.functions.EdgeTriple;
-import org.gradoop.flink.util.GradoopFlinkConfig;
-import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.common.model.impl.pojo.EdgeFactory;
-import org.gradoop.common.model.impl.pojo.VertexFactory;
-import org.gradoop.flink.model.impl.functions.epgm.EdgeFromIds;
-import org.gradoop.flink.model.impl.functions.epgm.Id;
-import org.gradoop.flink.model.impl.functions.epgm.VertexFromId;
-import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.model.impl.functions.utils.Cast;
 import org.gradoop.flink.model.impl.operators.matching.simulation.dual.tuples.FatVertex;
+import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Provides methods for post-processing query results.
@@ -92,9 +91,10 @@ public class PostProcessor {
    * @return Graph collection
    */
   public static FlinkGraphCollection extractGraphCollectionWithData(
-    DataSet<Element> elements, LogicalGraph inputGraph, boolean mayOverlap) {
+    DataSet<Element> elements, FlinkLogicalGraph inputGraph,
+    boolean mayOverlap) {
 
-    GradoopFlinkConfig config = (GradoopFlinkConfig) inputGraph.getConfig();
+    GradoopFlinkConfig config = inputGraph.getConfig();
 
     // get result collection without data
     FlinkGraphCollection collection =

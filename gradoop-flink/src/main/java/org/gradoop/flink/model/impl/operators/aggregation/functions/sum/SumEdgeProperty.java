@@ -57,7 +57,7 @@ public class SumEdgeProperty extends AggregateWithDefaultValueFunction {
    * @return 1-element dataset with vertex count
    */
   @Override
-  public DataSet<PropertyValue> execute(LogicalGraph graph) {
+  public DataSet<PropertyValue> execute(FlinkLogicalGraph graph) {
     return Sum.sum(
       graph.getEdges(),
       propertyKey,
@@ -73,7 +73,7 @@ public class SumEdgeProperty extends AggregateWithDefaultValueFunction {
    */
   @Override
   public DataSet<Tuple2<GradoopId, PropertyValue>> execute(
-    GraphCollection collection) {
+    FlinkGraphCollection collection) {
     return Sum.groupBy(
       collection.getEdges(),
       propertyKey,

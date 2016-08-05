@@ -22,15 +22,14 @@ import com.google.common.base.Strings;
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.log4j.Logger;
-import org.gradoop.common.model.api.operators.UnaryGraphToCollectionOperator;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.common.model.impl.properties.PropertyValue;
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.PairElementWithPropertyValue;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphToCollectionOperator;
 import org.gradoop.flink.model.impl.operators.matching.common.debug.PrintIdWithCandidates;
 import org.gradoop.flink.model.impl.operators.matching.common.debug.PrintTripleWithCandidates;
 import org.gradoop.flink.model.impl.operators.matching.common.debug.Printer;
@@ -41,8 +40,8 @@ import org.gradoop.flink.model.impl.operators.matching.common.tuples.TripleWithC
 /**
  * Base class for pattern matching implementations.
  */
-public abstract class PatternMatching implements UnaryGraphToCollectionOperator
-    <GraphHead, Vertex, Edge, FlinkLogicalGraph, FlinkGraphCollection> {
+public abstract class PatternMatching implements
+  FlinkUnaryGraphToCollectionOperator {
   /**
    * GDL based query string
    */

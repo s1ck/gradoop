@@ -19,37 +19,34 @@ package org.gradoop.flink.model.impl.operators.cloning;
 
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.flink.model.impl.functions.epgm.ElementIdUpdater;
-import org.gradoop.flink.model.impl.functions.epgm.TargetId;
-import org.gradoop.flink.model.impl.operators.cloning.functions
-  .EdgeSourceUpdateJoin;
-import org.gradoop.flink.model.impl.operators.cloning.functions.EdgeTargetUpdateJoin;
-import org.gradoop.flink.model.impl.operators.cloning.functions.ElementGraphUpdater;
-import org.gradoop.flink.model.impl.operators.cloning.functions.Value0Of2ToId;
-import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.flink.model.impl.functions.epgm.Clone;
+import org.gradoop.flink.model.impl.functions.epgm.ElementIdUpdater;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.epgm.PairElementWithNewId;
 import org.gradoop.flink.model.impl.functions.epgm.SourceId;
-import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.functions.epgm.TargetId;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphToGraphOperator;
+import org.gradoop.flink.model.impl.operators.cloning.functions.EdgeSourceUpdateJoin;
+import org.gradoop.flink.model.impl.operators.cloning.functions.EdgeTargetUpdateJoin;
+import org.gradoop.flink.model.impl.operators.cloning.functions.ElementGraphUpdater;
+import org.gradoop.flink.model.impl.operators.cloning.functions.Value0Of2ToId;
 
 /**
  * Creates a copy of the logical graph with new ids for the graph head,
  * vertices and edges.
  */
-public class Cloning implements UnaryGraphToGraphOperator {
+public class Cloning implements FlinkUnaryGraphToGraphOperator {
 
   /**
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph execute(LogicalGraph graph) {
+  public FlinkLogicalGraph execute(FlinkLogicalGraph graph) {
 
     //--------------------------------------------------------------------------
     // compute new graphs
@@ -95,7 +92,7 @@ public class Cloning implements UnaryGraphToGraphOperator {
       .withBroadcastSet(graphId, ElementGraphUpdater.GRAPHID);
 
     return FlinkLogicalGraph.fromDataSets(graphHead,
-      vertices, edges, (GradoopFlinkConfig) graph.getConfig());
+      vertices, edges, graph.getConfig());
   }
 
   /**

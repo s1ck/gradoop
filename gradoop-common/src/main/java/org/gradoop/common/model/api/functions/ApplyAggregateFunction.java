@@ -17,11 +17,11 @@
 
 package org.gradoop.common.model.api.functions;
 
-import org.apache.flink.api.java.DataSet;
-import org.apache.flink.api.java.tuple.Tuple2;
+import org.gradoop.common.model.api.entities.EPGMEdge;
+import org.gradoop.common.model.api.entities.EPGMGraphHead;
+import org.gradoop.common.model.api.entities.EPGMVertex;
 import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.common.model.impl.properties.PropertyValue;
+import org.gradoop.common.model.api.operators.LogicalGraph;
 
 /**
  * Describes an aggregate function that can be applied on a collection of graphs
@@ -29,7 +29,11 @@ import org.gradoop.common.model.impl.properties.PropertyValue;
  *
  * @see ApplyAggregateFunction
  */
-public interface ApplyAggregateFunction {
+public interface ApplyAggregateFunction
+  <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
+    LG extends LogicalGraph<G, V, E, LG, GC, AGG_OUT, BOOL_OUT>,
+    GC extends GraphCollection<G, V, E, LG, GC, AGG_OUT, BOOL_OUT>,
+    AGG_OUT, BOOL_OUT> {
 
   /**
    * Defines the aggregate function. The input is a graph collection, the output
@@ -37,9 +41,9 @@ public interface ApplyAggregateFunction {
    * holds the graph identifier and the associated aggregate value (e.g. count).
    *
    * @param collection input graph collection
-   * @return data set containing graph id + aggregate tuples
+   * @return aggregate values for all graphs
    */
-  DataSet<Tuple2<GradoopId, PropertyValue>> execute(GraphCollection collection);
+  AGG_OUT execute(GC collection);
 
   /**
    * Return the default value that will be used when a graph has no vertices

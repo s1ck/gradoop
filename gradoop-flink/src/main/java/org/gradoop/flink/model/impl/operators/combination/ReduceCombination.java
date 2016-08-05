@@ -17,16 +17,15 @@
 
 package org.gradoop.flink.model.impl.operators.combination;
 
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
-import org.gradoop.common.model.api.operators.ReducibleBinaryGraphToGraphOperator;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.operators.FlinkReducibleBinaryGraphToGraphOperator;
 
 /**
  * Computes the combined graph from a collection of logical graphs.
  */
-public class ReduceCombination implements ReducibleBinaryGraphToGraphOperator {
+public class ReduceCombination implements
+  FlinkReducibleBinaryGraphToGraphOperator {
 
   /**
    * Creates a new logical graph by union the vertex and edge sets of all graph
@@ -36,10 +35,10 @@ public class ReduceCombination implements ReducibleBinaryGraphToGraphOperator {
    * @return combined graph
    */
   @Override
-  public LogicalGraph execute(GraphCollection collection) {
+  public FlinkLogicalGraph execute(FlinkGraphCollection collection) {
     return FlinkLogicalGraph.fromDataSets(
       collection.getVertices(),
-      collection.getEdges(), (GradoopFlinkConfig) collection.getConfig());
+      collection.getEdges(), collection.getConfig());
   }
 
   @Override

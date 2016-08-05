@@ -17,7 +17,6 @@
 
 package org.gradoop.common.model.api.operators;
 
-import org.apache.flink.api.java.DataSet;
 import org.gradoop.common.model.api.entities.EPGMEdge;
 import org.gradoop.common.model.api.entities.EPGMGraphHead;
 import org.gradoop.common.model.api.entities.EPGMVertex;
@@ -29,8 +28,9 @@ import org.gradoop.common.model.api.entities.EPGMVertex;
  */
 public interface BinaryCollectionToValueOperator
   <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
-    LG extends LogicalGraph<G, V, E, LG, GC>,
-    GC extends GraphCollection<G, V, E, LG, GC>, T>
+    LG extends LogicalGraph<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT>,
+    GC extends GraphCollection<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT>,
+    AGG_OUT, EQUAL_OUT, T>
   extends Operator {
   /**
    * Executes the operator.
@@ -39,5 +39,5 @@ public interface BinaryCollectionToValueOperator
    * @param secondCollection second input collection
    * @return operator result
    */
-  DataSet<T> execute(GC firstCollection, GC secondCollection);
+  T execute(GC firstCollection, GC secondCollection);
 }

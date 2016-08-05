@@ -19,13 +19,17 @@ package org.gradoop.flink.model.impl;
 
 import org.apache.flink.api.java.DataSet;
 import org.gradoop.common.model.api.operators.GraphTransactions;
+import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 import org.gradoop.common.model.impl.pojo.GraphTransaction;
 
 /**
  * Represents a logical graph inside the EPGM.
  */
-public class FlinkGraphTransactions implements GraphTransactions {
+public class FlinkGraphTransactions implements GraphTransactions
+  <GraphHead, Vertex, Edge, GraphTransaction> {
 
   /**
    * Graph data associated with the logical graphs in that collection.

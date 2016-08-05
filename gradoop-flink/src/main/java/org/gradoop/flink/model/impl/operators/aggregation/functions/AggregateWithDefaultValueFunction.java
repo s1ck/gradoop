@@ -17,15 +17,26 @@
 
 package org.gradoop.flink.model.impl.operators.aggregation.functions;
 
+import org.apache.flink.api.java.DataSet;
+import org.apache.flink.api.java.tuple.Tuple2;
 import org.gradoop.common.model.api.functions.AggregateFunction;
 import org.gradoop.common.model.api.functions.ApplyAggregateFunction;
+import org.gradoop.common.model.impl.id.GradoopId;
+import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.common.model.impl.properties.PropertyValue;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
+import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 
 /**
  * Aggregation function for which a default value can be
  * specified in the constructor.
  */
-public abstract class AggregateWithDefaultValueFunction
-  implements AggregateFunction,  ApplyAggregateFunction {
+public abstract class AggregateWithDefaultValueFunction implements
+  AggregateFunction<GraphHead, Vertex, Edge, FlinkLogicalGraph,
+      FlinkGraphCollection, DataSet<PropertyValue>, DataSet<Boolean>>,ApplyAggregateFunction<GraphHead, Vertex, Edge, FlinkLogicalGraph,
+          FlinkGraphCollection, DataSet<Tuple2<GradoopId, PropertyValue>>, DataSet<Boolean>> {
 
   /**
    * User defined default value.

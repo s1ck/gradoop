@@ -48,53 +48,11 @@ public interface GraphBaseOperators
   // Containment methods
   //----------------------------------------------------------------------------
 
-  /**
-   * Returns all vertices including vertex data associated with that graph.
-   *
-   * @return vertices
-   */
-  DataSet<V> getVertices();
-
-  /**
-   * Returns all edge data associated with that logical graph.
-   *
-   * @return edges
-   */
-  DataSet<E> getEdges();
-
-  /**
-   * Returns the edge data associated with the outgoing edges of the given
-   * vertex.
-   *
-   * @param vertexID vertex identifier
-   * @return outgoing edge data of given vertex
-   */
-  @Deprecated
-  DataSet<Edge> getOutgoingEdges(final GradoopId vertexID);
-
-  /**
-   * Returns the edge data associated with the incoming edges of the given
-   * vertex.
-   *
-   * @param vertexID vertex identifier
-   * @return incoming edge data of given vertex
-   */
-  @Deprecated
-  DataSet<E> getIncomingEdges(final GradoopId vertexID);
-
   //----------------------------------------------------------------------------
   // Utility methods
   //----------------------------------------------------------------------------
 
-  /**
-   * Returns a 1-element dataset containing a {@code boolean} value which
-   * indicates if the collection is empty.
-   *
-   * A collection is considered empty, if it contains no logical graphs.
-   *
-   * @return  1-element dataset containing {@code true}, if the collection is
-   *          empty or {@code false} if not
-   */
+
   DataSet<Boolean> isEmpty();
 
   /**

@@ -144,7 +144,7 @@ public class ExplorativeSubgraphIsomorphism extends PatternMatching {
 
   @Override
   protected FlinkGraphCollection executeForVertex(FlinkLogicalGraph graph) {
-    GradoopFlinkConfig config = (GradoopFlinkConfig) graph.getConfig();
+    GradoopFlinkConfig config = graph.getConfig();
     GraphHeadFactory graphHeadFactory = config.getGraphHeadFactory();
     VertexFactory vertexFactory = config.getVertexFactory();
 
@@ -207,7 +207,7 @@ public class ExplorativeSubgraphIsomorphism extends PatternMatching {
     // Post-Processing (build Graph Collection from embeddings)
     //--------------------------------------------------------------------------
 
-    GradoopFlinkConfig config = (GradoopFlinkConfig) graph.getConfig();
+    GradoopFlinkConfig config = graph.getConfig();
 
     DataSet<Element> elements = result
       .<Tuple1<Embedding>>project(0)

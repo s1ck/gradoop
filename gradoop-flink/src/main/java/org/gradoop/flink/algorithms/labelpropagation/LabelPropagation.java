@@ -30,6 +30,7 @@ import org.gradoop.common.model.impl.properties.PropertyValue;
 import org.gradoop.common.model.api.operators.UnaryGraphToGraphOperator;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphToGraphOperator;
 import org.gradoop.flink.util.GradoopFlinkConfig;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -47,7 +48,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * The computation will terminate if no new values are assigned.
  */
-public abstract class LabelPropagation implements UnaryGraphToGraphOperator {
+public abstract class LabelPropagation extends FlinkUnaryGraphToGraphOperator {
 
   /**
    * Counter to define maximum number of iterations for the algorithm
@@ -74,7 +75,7 @@ public abstract class LabelPropagation implements UnaryGraphToGraphOperator {
    * {@inheritDoc}
    */
   @Override
-  public LogicalGraph execute(LogicalGraph logicalGraph) {
+  public FlinkLogicalGraph execute(FlinkLogicalGraph logicalGraph) {
     // prepare vertex set for Gelly vertex centric iteration
     DataSet<org.apache.flink.graph.Vertex<GradoopId, PropertyValue>> vertices =
       logicalGraph.getVertices()
@@ -86,8 +87,7 @@ public abstract class LabelPropagation implements UnaryGraphToGraphOperator {
 
     // create Gelly graph
     Graph<GradoopId, PropertyValue, NullValue> gellyGraph = Graph.fromDataSet(
-      vertices, edges, ((GradoopFlinkConfig) logicalGraph.getConfig())
-        .getExecutionEnvironment());
+      vertices, edges, logicalGraph.getConfig().getExecutionEnvironment());
 
     DataSet<Vertex> labeledVertices = executeInternal(gellyGraph)
       .join(logicalGraph.getVertices())
@@ -95,9 +95,8 @@ public abstract class LabelPropagation implements UnaryGraphToGraphOperator {
       .with(new LPVertexJoin(propertyKey));
 
     // return labeled graph
-    return FlinkLogicalGraph.fromDataSets(
-      labeledVertices, logicalGraph.getEdges(),
-      (GradoopFlinkConfig) logicalGraph.getConfig());
+    return FlinkLogicalGraph.fromDataSets(labeledVertices,
+      logicalGraph.getEdges(), logicalGraph.getConfig());
   }
 
   /**

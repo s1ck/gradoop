@@ -27,14 +27,14 @@ import org.gradoop.common.model.api.entities.EPGMVertex;
  */
 public interface UnaryCollectionToCollectionOperator
   <G extends EPGMGraphHead, V extends EPGMVertex, E extends EPGMEdge,
-    LG extends LogicalGraph<G, V, E, LG, GC>,
-    GC extends GraphCollection<G, V, E, LG, GC>>
-  extends Operator {
+    LG extends LogicalGraph<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT>,
+    GC extends GraphCollection<G, V, E, LG, GC, AGG_OUT, EQUAL_OUT>,
+    AGG_OUT, EQUAL_OUT> extends Operator {
   /**
    * Executes the operator.
    *
    * @param collection input collection
    * @return operator result
    */
-  LG execute(GC collection);
+  GC execute(GC collection);
 }

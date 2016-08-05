@@ -17,24 +17,23 @@
 package org.gradoop.flink.model.impl.operators.equality;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.GraphCollection;
 import org.gradoop.common.model.impl.pojo.Edge;
-import org.gradoop.common.model.api.operators.BinaryCollectionToValueOperator;
-import org.gradoop.flink.model.impl.FlinkGraphCollection;
-import org.gradoop.flink.model.impl.operators.tostring.api.GraphHeadToString;
-import org.gradoop.flink.model.impl.operators.tostring.api.VertexToString;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.bool.Equals;
+import org.gradoop.flink.model.impl.operators.FlinkBinaryCollectionToValueOperator;
 import org.gradoop.flink.model.impl.operators.tostring.CanonicalAdjacencyMatrixBuilder;
 import org.gradoop.flink.model.impl.operators.tostring.api.EdgeToString;
+import org.gradoop.flink.model.impl.operators.tostring.api.GraphHeadToString;
+import org.gradoop.flink.model.impl.operators.tostring.api.VertexToString;
 
 /**
  * Operator to determine if two graph collections are equal according to given
  * string representations of graph heads, vertices and edges.
  */
-public class CollectionEquality
-  implements BinaryCollectionToValueOperator<Boolean> {
+public class CollectionEquality implements
+  FlinkBinaryCollectionToValueOperator<Boolean> {
 
   /**
    * builder to create the string representations of graph collections used for
@@ -60,8 +59,8 @@ public class CollectionEquality
   }
 
   @Override
-  public DataSet<Boolean> execute(GraphCollection firstCollection,
-    GraphCollection secondCollection) {
+  public DataSet<Boolean> execute(FlinkGraphCollection firstCollection,
+    FlinkGraphCollection secondCollection) {
     return Equals.cross(
       canonicalAdjacencyMatrixBuilder.execute(firstCollection),
       canonicalAdjacencyMatrixBuilder.execute(secondCollection)

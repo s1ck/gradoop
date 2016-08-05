@@ -18,27 +18,22 @@
 package org.gradoop.flink.model.impl.operators.exclusion;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators.LogicalGraph;
+import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
+import org.gradoop.common.model.impl.pojo.GraphHead;
+import org.gradoop.common.model.impl.pojo.Vertex;
 import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.FlinkLogicalGraph;
 import org.gradoop.flink.model.impl.functions.epgm.ByDifferentId;
 import org.gradoop.flink.model.impl.functions.epgm.Id;
 import org.gradoop.flink.model.impl.functions.graphcontainment.InGraph;
 import org.gradoop.flink.model.impl.functions.graphcontainment.NotInGraphsBroadcast;
-
-import org.gradoop.common.model.impl.pojo.GraphHead;
-import org.gradoop.common.model.impl.pojo.Vertex;
-import org.gradoop.common.model.api.operators.ReducibleBinaryGraphToGraphOperator;
-
-import org.gradoop.common.model.impl.id.GradoopId;
-import org.gradoop.flink.util.GradoopFlinkConfig;
+import org.gradoop.flink.model.impl.operators.FlinkReducibleBinaryGraphToGraphOperator;
 
 /**
  * Computes the exclusion graph from a collection of logical graphs.
  */
-public class ReduceExclusion implements ReducibleBinaryGraphToGraphOperator {
+public class ReduceExclusion implements FlinkReducibleBinaryGraphToGraphOperator {
 
   /**
    * Graph identifier to start excluding from in a collection scenario.
@@ -65,7 +60,7 @@ public class ReduceExclusion implements ReducibleBinaryGraphToGraphOperator {
    * @return excluded graph
    */
   @Override
-  public LogicalGraph execute(GraphCollection collection) {
+  public FlinkLogicalGraph execute(FlinkGraphCollection collection) {
     DataSet<GradoopId> excludedGraphIds = collection.getGraphHeads()
       .filter(new ByDifferentId<GraphHead>(startId))
       .map(new Id<GraphHead>());
@@ -80,10 +75,8 @@ public class ReduceExclusion implements ReducibleBinaryGraphToGraphOperator {
       .filter(new NotInGraphsBroadcast<Edge>())
       .withBroadcastSet(excludedGraphIds, NotInGraphsBroadcast.GRAPH_IDS);
 
-    return FlinkLogicalGraph.fromDataSets(
-      vertices,
-      edges,
-      (GradoopFlinkConfig) collection.getConfig());
+    return FlinkLogicalGraph.fromDataSets(vertices, edges,
+      collection.getConfig());
   }
 
   @Override

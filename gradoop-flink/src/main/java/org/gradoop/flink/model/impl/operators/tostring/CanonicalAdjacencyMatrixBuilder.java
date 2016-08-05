@@ -18,14 +18,13 @@
 package org.gradoop.flink.model.impl.operators.tostring;
 
 import org.apache.flink.api.java.DataSet;
-import org.gradoop.common.model.api.operators.GraphCollection;
-import org.gradoop.common.model.api.operators
-  .UnaryGraphCollectionToValueOperator;
 import org.gradoop.common.model.impl.id.GradoopId;
 import org.gradoop.common.model.impl.pojo.Edge;
 import org.gradoop.common.model.impl.pojo.GraphHead;
 import org.gradoop.common.model.impl.pojo.Vertex;
+import org.gradoop.flink.model.impl.FlinkGraphCollection;
 import org.gradoop.flink.model.impl.functions.epgm.LabelCombiner;
+import org.gradoop.flink.model.impl.operators.FlinkUnaryGraphCollectionToValueOperator;
 import org.gradoop.flink.model.impl.operators.tostring.api.EdgeToString;
 import org.gradoop.flink.model.impl.operators.tostring.api.GraphHeadToString;
 import org.gradoop.flink.model.impl.operators.tostring.api.VertexToString;
@@ -41,14 +40,13 @@ import org.gradoop.flink.model.impl.operators.tostring.functions.UndirectedAdjac
 import org.gradoop.flink.model.impl.operators.tostring.tuples.EdgeString;
 import org.gradoop.flink.model.impl.operators.tostring.tuples.GraphHeadString;
 import org.gradoop.flink.model.impl.operators.tostring.tuples.VertexString;
-import org.gradoop.flink.util.GradoopFlinkConfig;
 
 /**
  * Operator deriving a string representation from a graph collection.
  * The representation follows the concept of a canonical adjacency matrix.
  */
 public class CanonicalAdjacencyMatrixBuilder implements
-  UnaryGraphCollectionToValueOperator<String> {
+  FlinkUnaryGraphCollectionToValueOperator<String> {
 
   /**
    * function describing string representation of graph heads
@@ -87,7 +85,7 @@ public class CanonicalAdjacencyMatrixBuilder implements
   }
 
   @Override
-  public DataSet<String> execute(GraphCollection collection) {
+  public DataSet<String> execute(FlinkGraphCollection collection) {
 
     // 1. label graph heads
     DataSet<GraphHeadString> graphHeadLabels = collection.getGraphHeads()
@@ -186,13 +184,17 @@ public class CanonicalAdjacencyMatrixBuilder implements
     // 11. add empty head to prevent empty result for empty collection
 
     graphHeadLabels = graphHeadLabels
-      .union(((GradoopFlinkConfig) collection.getConfig())
-        .getExecutionEnvironment()
+      .union(collection.getConfig().getExecutionEnvironment()
         .fromElements(new GraphHeadString(GradoopId.get(), "")));
 
     // 12. label collection
 
     return graphHeadLabels
       .reduceGroup(new ConcatGraphHeadStrings());
+  }
+
+  @Override
+  public String getName() {
+    return CanonicalAdjacencyMatrixBuilder.class.getName();
   }
 }
